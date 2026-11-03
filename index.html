@@ -9,14 +9,23 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-  <!-- ENCABEZADO PRINCIPAL -->
+  <!-- ENCABEZADO PRINCIPAL RESTAURADO CON BADGES Y AYUNTAMIENTOS -->
   <header class="bg-slate-900 text-white shadow-md border-b border-slate-800">
     <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-3">
-        <div class="bg-blue-600 p-2.5 rounded-xl text-2xl font-bold shadow-lg shadow-blue-500/30">T</div>
+      <div class="flex items-center gap-3.5">
+        <div class="bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-500/20 text-emerald-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
         <div>
-          <h1 class="text-xl font-bold tracking-wide">Portal Nacional de Transparencia</h1>
-          <p class="text-xs text-slate-400">Observatorio Cívico del Empleo Público y Control de Escaños</p>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Red Estatal de Transparencia</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              8.131 Ayuntamientos + 50 Provincias + 17 CCAA
+            </span>
+          </div>
+          <h1 class="text-base sm:text-lg font-extrabold tracking-tight">Portal Nacional de Transparencia del Empleo Público</h1>
         </div>
       </div>
       <div class="flex items-center gap-3">
@@ -27,7 +36,7 @@
     </div>
   </header>
 
-  <!-- CONTENIDO PRINCIPAL (DISEÑO ORIGINAL DE 2 COLUMNAS) -->
+  <!-- CONTENIDO PRINCIPAL (DISEÑO DE 2 COLUMNAS) -->
   <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
     
     <!-- COLUMNA IZQUIERDA: SELECTORES JERÁRQUICOS DE 4 NIVELES -->
@@ -43,11 +52,11 @@
         <select id="select-nivel" onchange="onNivelChange()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
           <option value="">-- Selecciona Nivel --</option>
           <option value="constitucional">⚖️ Órganos Constitucionales y Cortes (Congreso / Senado)</option>
-          <option value="age">🇪🇸 A.G.E. (Ministerios y AGE)</option>
-          <option value="ccaa">🌐 Comunidades Autónomas (Las 17 CCAA)</option>
-          <option value="locales">🏛️ Entidades Locales (Ayuntamientos / Provincias)</option>
+          <option value="age">🇪🇸 A.G.E. (22 Ministerios / AEAT / FCSE)</option>
+          <option value="ccaa">🌐 Comunidades Autónomas (17 CCAA + Sanidad / Educación)</option>
+          <option value="locales">🏛️ Entidades Locales (8.131 Ayuntamientos / 50 Provincias)</option>
           <option value="universidades">🎓 Universidades Públicas</option>
-          <option value="empresas_publicas">🏢 Empresas Públicas y Entes</option>
+          <option value="empresas_publicas">🏢 Empresas Públicas (Correos / Renfe / RTVE)</option>
         </select>
       </div>
 
@@ -135,7 +144,7 @@
     </section>
   </main>
 
-  <!-- LÓGICA JAVASCRIPT AMPLIADA -->
+  <!-- LÓGICA JAVASCRIPT -->
   <script>
     const territorialData = {
       constitucional: {
@@ -143,17 +152,20 @@
         organismos: [
           { id: "congreso", name: "Congreso de los Diputados", areas: ["Sesiones Plenarias y Votaciones", "Comisión Constitucional", "Comisión de Hacienda y Función Pública", "Diputación Permanente"] },
           { id: "senado", name: "Senado de España", areas: ["Pleno del Senado", "Comisión General de Comunidades Autónomas", "Comisión de Entidades Locales"] },
-          { id: "cgpj", name: "Consejado General del Poder Judicial (CGPJ)", areas: ["Pleno del CGPJ", "Comisión Permanente", "Servicio de Inspección"] },
-          { id: "tribunal_constitucional", name: "Tribunal Constitucional", areas: ["Pleno", "Salas de Garantías", "Secretaría General"] }
+          { id: "cgpj", name: "Consejo General del Poder Judicial (CGPJ)", areas: ["Pleno del CGPJ", "Comisión Permanente", "Servicio de Inspección"] },
+          { id: "tribunal_constitucional", name: "Tribunal Constitucional", areas: ["Pleno", "Salas de Garantías", "Secretaría General"] },
+          { id: "tribunal_cuentas", name: "Tribunal de Cuentas", areas: ["Sección de Fiscalización", "Sección de Enjuiciamiento"] },
+          { id: "defensor_pueblo", name: "Defensor del Pueblo", areas: ["Área de Administración y Atención Cívica"] }
         ]
       },
       age: {
-        label: "A.G.E. (Ministerios y Organismos)",
+        label: "A.G.E. (Ministerios y Fuerzas de Seguridad)",
         organismos: [
           { id: "hacienda", name: "Ministerio de Hacienda y Función Pública / AEAT", areas: ["Gestión Tributaria", "Inspección Financiera", "Aduanas e Impuestos Especiales", "Recaudación Ejecutiva"] },
-          { id: "interior", name: "Ministerio del Interior (Policía / Guardia Civil / DGT)", areas: ["Seguridad Ciudadana", "Extranjería y Fronteras", "Tráfico y DGT", "Instituciones Penitenciarias"] },
+          { id: "interior", name: "Ministerio del Interior (Policía / Guardia Civil / DGT)", areas: ["Policía Nacional (Comisarías/Fronteras)", "Guardia Civil (Comandancias/Tráfico)", "Dirección General de Tráfico (DGT)", "Instituciones Penitenciarias"] },
+          { id: "defensa", name: "Ministerio de Defensa (FFAA / UME)", areas: ["Unidad Militar de Emergencias (UME)", "Ejército de Tierra / Armada / Aire", "Servicios Centrales de Defensa"] },
           { id: "sanidad", name: "Ministerio de Sanidad / INGESA", areas: ["Salud Pública", "Agencia del Medicamento (AEMPS)", "Inspección Sanitaria"] },
-          { id: "trabajo", name: "Ministerio de Trabajo / SEPE", areas: ["Prestaciones por Desempleo", "Inspección de Trabajo", "Atención Presencial"] },
+          { id: "trabajo", name: "Ministerio de Trabajo / SEPE", areas: ["Prestaciones por Desempleo", "Inspección de Trabajo y Seguridad Social", "Atención Presencial"] },
           { id: "inclusion", name: "Seguridad Social (INSS / TGSS)", areas: ["Atención CAISS (Pensiones/IMV)", "Tesorería General", "Recaudación"] },
           { id: "transportes", name: "Ministerio de Transportes y Movilidad Sostenible", areas: ["Carreteras", "Marina Mercante", "Supervisión Ferroviaria"] },
           { id: "justicia", name: "Ministerio de Justicia", areas: ["Registro Civil Central", "Atención al Ciudadano", "Gerencias Territoriales"] }
@@ -174,7 +186,8 @@
             name: "Comunidad de Madrid",
             organismos: [
               { id: "sermas", name: "SERMAS (Servicio Madrileño de Salud)", areas: ["Centros de Salud", "Hospitales Públicos", "SUMMA 112"] },
-              { id: "asamblea_madrid", name: "Asamblea de Madrid", areas: ["Pleno de la Asamblea", "Comisiones de Investigación y Control"] }
+              { id: "bomberos_madrid", name: "Cuerpo de Bomberos de la Comunidad de Madrid", areas: ["Parques Operativos", "Centro de Coordinación 112"] },
+              { id: "asamblea_madrid", name: "Asamblea de Madrid", areas: ["Pleno de la Asamblea", "Comisiones"] }
             ]
           },
           andalucia: {
@@ -187,7 +200,8 @@
           catalunya: {
             name: "Catalunya (Generalitat)",
             organismos: [
-              { id: "ics", name: "ICS (Institut Català de la Salut)", areas: ["CAPs (Atenció Primària)", "Hospitals Públics", "Atenció Continuada"] },
+              { id: "ics", name: "ICS (Institut Català de la Salut)", areas: ["CAPs (Atenció Primària)", "Hospitals Públics"] },
+              { id: "mossos", name: "Mossos d'Esquadra", areas: ["Seguretat Ciutadana", "Trànsit", "Investigació"] },
               { id: "parlament_catalunya", name: "Parlament de Catalunya", areas: ["Ple", "Comissions Legislatives"] }
             ]
           },
@@ -201,23 +215,24 @@
             name: "País Vasco / Euskadi",
             organismos: [
               { id: "osakidetza", name: "Osakidetza (Servicio Vasco de Salud)", areas: ["Hospitales y Comarcas Sanitarias"] },
+              { id: "ertzaintza", name: "Ertzaintza", areas: ["Protección Ciudadana", "Tráfico", "Investigación"] },
               { id: "parlamento_vasco", name: "Parlamento Vasco / Eusko Legebiltzarra", areas: ["Pleno y Comisiones"] }
             ]
           },
-          // Otras CCAA integradas genéricamente para cubrir las 17
           otras_ccaa: {
             name: "Otras CCAA (Asturias, Aragón, Castilla y León, Castilla-La Mancha, Canarias, Cantabria, Extremadura, Baleares, Murcia, Navarra, La Rioja, Ceuta y Melilla)",
             organismos: [
-              { id: "servicios_ccaa", name: "Administración Autonómica General y Salud", areas: ["Servicios Centrales", "Atención Sanitaria", "Educación y Empleo"] }
+              { id: "servicios_ccaa", name: "Administración Autonómica General, Salud y Bomberos", areas: ["Servicios Centrales", "Atención Sanitaria", "Educación", "Bomberos y Emergencias"] }
             ]
           }
         }
       },
       locales: {
-        label: "Entidades Locales (Ayuntamientos y Diputaciones)",
+        label: "Entidades Locales (8.131 Ayuntamientos / 50 Provincias)",
         organismos: [
-          { id: "atencion_ciudadana", name: "Oficinas de Atención Ciudadana (OAC / Padrón)", areas: ["Registro y Padrón Municipal", "Licencias y Urbanismo", "Servicios Sociales de Base"] },
-          { id: "policia_local", name: "Policía Local / Seguridad Ciudadana", areas: ["Patrulla de Barrio / Atestados", "Tráfico y Movilidad", "Policía Administrativa"] },
+          { id: "atencion_ciudadana", name: "Oficinas de Atención Ciudadana (OAC / Padrón Municipal)", areas: ["Registro y Padrón Municipal", "Licencias y Urbanismo", "Servicios Sociales de Base"] },
+          { id: "policia_local", name: "Policía Local / Guardia Urbana / Seguridad Ciudadana", areas: ["Patrulla de Barrio / Atestados", "Tráfico y Movilidad", "Policía Administrativa"] },
+          { id: "bomberos_locales", name: "Servicios Municipales y Consorcios de Bomberos", areas: ["Intervención Operativa / Retenes", "Prevención y Extinción", "Central de Incidencias"] },
           { id: "obras_mantenimiento", name: "Brigadas Municipales de Obras y Servicios", areas: ["Mantenimiento Urbano", "Jardines y Vías Públicas", "Almacén Municipal"] },
           { id: "pleno_ayto", name: "Corporación Municipal y Órganos de Gobierno", areas: ["Pleno Municipal", "Comisión Informativa de Urbanismo", "Comisión de Hacienda", "Junta de Gobierno Local"] }
         ]
@@ -237,7 +252,7 @@
           { id: "correos", name: "Sociedad Estatal Correos y Telégrafos", areas: ["Unidades de Reparto (Cartería)", "Oficinas de Atención al Público", "Centros de Tratamiento (CTA)"] },
           { id: "renfe", name: "Grupo Renfe / Adif", areas: ["Atención al Cliente en Estaciones", "Taquillas y Venta", "Mantenimiento"] },
           { id: "rtve", name: "Corporación RTVE", areas: ["Centros Territoriales", "Servicios Informativos y Producción"] },
-          { id: "aena", name: "AENA / ENAIRE", areas: ["Operaciones Aeroportuarias", "Atención a Pasajeros"] }
+          { id: "aena", name: "AENA / ENAIRE", areas: ["Operaciones Aeroportuarias", "Atención a Pasajeros", "Navegación Aérea"] }
         ]
       }
     };
