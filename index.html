@@ -1,1120 +1,367 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-50">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Nacional de Transparencia del Empleo Público • España</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857',
-                            800: '#065f46',
-                            900: '#064e3b',
-                        },
-                        navy: {
-                            950: '#030712',
-                            900: '#0f172a',
-                            800: '#1e293b',
-                            700: '#334155'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Google Fonts & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Nacional de Transparencia del Empleo Público y Control de Escaños</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="h-full flex flex-col text-slate-800 bg-slate-50 dark:bg-slate-900 dark:text-slate-100 antialiased transition-colors duration-200">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-    <!-- Toast Notifications Container -->
-    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-3 max-w-sm pointer-events-none"></div>
-
-    <!-- Official Data Origin Banner / Sync Status -->
-    <div class="bg-navy-950 text-slate-300 border-b border-slate-800 text-[11px] py-2 px-4 sm:px-8">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
-            <div class="flex items-center space-x-3 overflow-x-auto w-full md:w-auto">
-                <span class="inline-flex items-center px-2 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">
-                    <span class="w-1.5 h-1.5 mr-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
-                    API REGISTRO CENTRAL DE PERSONAL (MINHAFP)
-                </span>
-                <span class="text-slate-400 hidden lg:inline">|</span>
-                <span class="truncate text-slate-400">BEPSAP • Datos.gob.es • Cortes Generales</span>
-                <span class="text-slate-400 hidden lg:inline">|</span>
-                <span class="font-mono text-slate-400 hidden xl:inline">HASH: <span id="syncHash" class="text-emerald-400">0x8f2a9...c4b</span></span>
-            </div>
-            
-            <div class="flex items-center space-x-4 w-full md:w-auto justify-end">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-clock-rotate-left text-amber-400"></i>
-                    <span>Próxima sincro: <strong id="countdownTimer" class="text-amber-400 font-mono">10s</strong></span>
-                </div>
-                <button onclick="forceSyncData()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded border border-slate-700 transition flex items-center space-x-1">
-                    <i class="fa-solid fa-rotate text-[10px]"></i>
-                    <span>Sincronizar Ya</span>
-                </button>
-            </div>
+  <!-- ENCABEZADO PRINCIPAL -->
+  <header class="bg-slate-900 text-white shadow-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <div class="bg-blue-600 p-2.5 rounded-xl text-2xl font-bold shadow-lg shadow-blue-500/30">T</div>
+        <div>
+          <h1 class="text-xl font-bold tracking-wide">Portal Nacional de Transparencia</h1>
+          <p class="text-xs text-slate-400">Observatorio Cívico del Empleo Público y Control de Escaños</p>
         </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-xs px-3.5 py-1.5 rounded-full border border-emerald-500/20 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Sistema Antifraude Activo
+        </span>
+      </div>
     </div>
+  </header>
 
-    <!-- Header / Navbar -->
-    <header class="bg-navy-900 text-white shadow-xl sticky top-0 z-40 border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center space-x-3.5">
-                    <div class="bg-emerald-500/10 p-2.5 rounded-xl backdrop-blur-md border border-emerald-500/20">
-                        <i class="fa-solid fa-building-columns text-2xl text-emerald-400"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Red Estatal de Transparencia</span>
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                                <i class="fa-solid fa-shield-check mr-1"></i>
-                                50 Provincias + 17 CCAA
-                            </span>
-                        </div>
-                        <h1 class="text-base sm:text-lg font-extrabold tracking-tight">Portal Nacional de Transparencia del Empleo Público</h1>
-                    </div>
-                </div>
+  <!-- CONTENIDO PRINCIPAL (DISEÑO ORIGINAL DE 2 COLUMNAS) -->
+  <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- COLUMNA IZQUIERDA: SELECTORES JERÁRQUICOS DE 4 NIVELES -->
+    <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 lg:col-span-1 flex flex-col gap-5 h-fit">
+      <div class="border-b pb-3">
+        <h2 class="text-lg font-bold text-slate-900">Filtro Territorial y Organismo</h2>
+        <p class="text-xs text-slate-500 mt-1">Selecciona la administración para auditar datos en tiempo real.</p>
+      </div>
+      
+      <!-- 1. Nivel de Administración -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">1. Nivel de Administración</label>
+        <select id="select-nivel" onchange="onNivelChange()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
+          <option value="">-- Selecciona Nivel --</option>
+          <option value="constitucional">⚖️ Órganos Constitucionales y Cortes (Congreso / Senado)</option>
+          <option value="age">🇪🇸 A.G.E. (Ministerios y AGE)</option>
+          <option value="ccaa">🌐 Comunidades Autónomas (Las 17 CCAA)</option>
+          <option value="locales">🏛️ Entidades Locales (Ayuntamientos / Provincias)</option>
+          <option value="universidades">🎓 Universidades Públicas</option>
+          <option value="empresas_publicas">🏢 Empresas Públicas y Entes</option>
+        </select>
+      </div>
 
-                <div class="flex items-center space-x-3">
-                    <div class="hidden sm:flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
-                        <span class="text-xs font-semibold text-slate-300">Live Feed</span>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="liveToggle" class="sr-only peer" checked>
-                            <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                        </label>
-                    </div>
+      <!-- 2. Ámbito / Provincia / CCAA -->
+      <div id="wrapper-territorio" class="hidden">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" id="label-territorio">2. Territorio / Ámbito</label>
+        <select id="select-territorio" onchange="onTerritorioChange()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
+          <option value="">-- Selecciona Opción --</option>
+        </select>
+      </div>
 
-                    <button id="themeToggle" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white p-2.5 rounded-xl transition border border-slate-700" title="Cambiar Tema">
-                        <i class="fa-solid fa-moon dark:hidden"></i>
-                        <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
-                    </button>
+      <!-- 3. Organismo o Entidad -->
+      <div id="wrapper-organismo" class="hidden">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">3. Organismo o Institución</label>
+        <select id="select-organismo" onchange="onOrganismoChange()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
+          <option value="">-- Selecciona Organismo --</option>
+        </select>
+      </div>
 
-                    <button onclick="exportDataCSV()" class="hidden lg:flex bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition border border-slate-700 items-center space-x-2" title="Exportar Informe CSV">
-                        <i class="fa-solid fa-download text-emerald-400"></i>
-                        <span>CSV</span>
-                    </button>
+      <!-- 4. Área, Servicio o Comisión -->
+      <div id="wrapper-area" class="hidden">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">4. Área, Servicio o Comisión</label>
+        <select id="select-area" onchange="updateDashboard()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
+          <option value="">-- Selecciona Área / Servicio --</option>
+        </select>
+      </div>
+    </section>
 
-                    <a href="#denuncia" class="hidden sm:flex bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm items-center space-x-2">
-                        <i class="fa-solid fa-shield-halved"></i>
-                        <span>Buzón Antifraude</span>
-                    </a>
-                </div>
-            </div>
+    <!-- COLUMNA DERECHA: DASHBOARD DE INDICADORES -->
+    <section class="lg:col-span-2 flex flex-col gap-6">
+      
+      <!-- TARJETAS DE INDICADORES (METRICS) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Presencia Efectiva</p>
+          <p id="stat-presencia" class="text-3xl font-black text-slate-900 mt-2">--%</p>
+          <p class="text-xs text-emerald-600 font-medium mt-1">Verificación Antifraude</p>
         </div>
-    </header>
-
-    <!-- Main Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-
-        <!-- Official Sources Info Bar -->
-        <section class="bg-emerald-950/30 dark:bg-emerald-950/50 border border-emerald-500/30 rounded-2xl p-4 flex flex-col lg:flex-row items-center justify-between gap-4 text-xs">
-            <div class="flex items-center space-x-3">
-                <div class="p-2 bg-emerald-500/20 rounded-xl text-emerald-400 border border-emerald-500/30">
-                    <i class="fa-solid fa-certificate text-lg"></i>
-                </div>
-                <div>
-                    <strong class="text-slate-900 dark:text-slate-100 font-bold block">Origen e Integridad Verificada de los Datos</strong>
-                    <p class="text-slate-600 dark:text-slate-300 text-[11px]">
-                        Métricas sincronizadas con el <strong>Boletín Estadístico del Personal (BEPSAP)</strong>, Registro Central de Personal del MINHAFP y Sistemas de Control Biométrico Antifraude.
-                    </p>
-                </div>
-            </div>
-            <button onclick="toggleSourcesModal()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold transition text-[11px] whitespace-nowrap">
-                Ver Fuentes Oficiales
-            </button>
-        </section>
-
-        <!-- Hierarchical Dynamic Selector (4 Levels) -->
-        <section class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-colors">
-            <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-700 pb-3">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-filter text-emerald-500"></i>
-                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Filtro Jerárquico de Administraciones Públicas</h2>
-                </div>
-                <span id="activeEntityBadge" class="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-full text-xs font-bold border border-emerald-300 dark:border-emerald-800">
-                    Seleccionado: Ayuntamiento de Madrid
-                </span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Level 1: Admin Type -->
-                <div>
-                    <label for="adminTypeSelect" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-                        1. Nivel de Administración
-                    </label>
-                    <select id="adminTypeSelect" onchange="onAdminTypeChange()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-medium text-xs rounded-xl focus:ring-2 focus:ring-emerald-500 p-3 cursor-pointer">
-                        <option value="locales">🏛️ Entidades Locales (Ayuntamientos / Provincias)</option>
-                        <option value="age">🇪🇸 Administración General del Estado (AGE)</option>
-                        <option value="ccaa">🌐 Comunidades Autónomas (17 CCAA)</option>
-                        <option value="universidades">🎓 Universidades Públicas</option>
-                        <option value="empresas">🏢 Empresas Públicas y Entes Sectoriales</option>
-                    </select>
-                </div>
-
-                <!-- Level 2: Province / Territory -->
-                <div>
-                    <label id="provinceLabel" for="provinceSelect" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-                        2. Provincia / Ámbito Territorial
-                    </label>
-                    <select id="provinceSelect" onchange="onProvinceChange()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-medium text-xs rounded-xl focus:ring-2 focus:ring-emerald-500 p-3 cursor-pointer">
-                        <!-- Injected via JS -->
-                    </select>
-                </div>
-
-                <!-- Level 3: Institution / Municipality -->
-                <div>
-                    <label id="entityLabel" for="entitySelect" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-                        3. Organismo o Entidad
-                    </label>
-                    <select id="entitySelect" onchange="onEntityChange()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-medium text-xs rounded-xl focus:ring-2 focus:ring-emerald-500 p-3 cursor-pointer">
-                        <!-- Injected via JS -->
-                    </select>
-                </div>
-
-                <!-- Level 4: Department / Service -->
-                <div>
-                    <label for="departmentSelect" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-                        4. Área, Servicio o Comisión
-                    </label>
-                    <select id="departmentSelect" onchange="onDepartmentChange()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-medium text-xs rounded-xl focus:ring-2 focus:ring-emerald-500 p-3 cursor-pointer">
-                        <!-- Injected via JS -->
-                    </select>
-                </div>
-            </div>
-
-            <!-- Quick Jump Buttons -->
-            <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-700 flex flex-wrap items-center gap-2">
-                <span class="text-xs font-bold text-slate-400 uppercase mr-2">Accesos Rápidos:</span>
-                <button onclick="quickSelect('locales', 'madrid', 'madrid_ayto')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 hover:bg-emerald-50 hover:text-emerald-600 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-semibold transition">Ayto. Madrid</button>
-                <button onclick="quickSelect('locales', 'barcelona', 'bcn_ayto')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 hover:bg-emerald-50 hover:text-emerald-600 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-semibold transition">Ayto. Barcelona</button>
-                <button onclick="quickSelect('age', 'nacional', 'min_hacienda')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 hover:bg-emerald-50 hover:text-emerald-600 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-semibold transition">Min. Hacienda / AEAT</button>
-                <button onclick="quickSelect('age', 'nacional', 'min_interior')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 hover:bg-emerald-50 hover:text-emerald-600 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-semibold transition">Policía / Guardia Civil</button>
-                <button onclick="quickSelect('ccaa', 'galicia', 'sergas')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 hover:bg-emerald-50 hover:text-emerald-600 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-semibold transition">SERGAS (Galicia)</button>
-                <button onclick="quickSelect('empresas', 'nacional', 'correos')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 hover:bg-emerald-50 hover:text-emerald-600 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-semibold transition">Correos S.A.</button>
-            </div>
-        </section>
-
-        <!-- Key Metrics Cards (KPIs) -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-[11px] font-bold text-slate-500 uppercase">Presencia Activa Real</span>
-                    <i class="fa-solid fa-fingerprint text-emerald-500 text-lg"></i>
-                </div>
-                <div class="flex items-baseline space-x-1.5">
-                    <span id="kpiActivePercent" class="text-2xl font-extrabold text-slate-900 dark:text-white">86.1%</span>
-                    <span id="kpiActiveCount" class="text-[11px] text-slate-500">(937/1090)</span>
-                </div>
-                <p class="text-[10px] text-emerald-600 font-semibold mt-2"><i class="fa-solid fa-shield-check mr-1"></i>Biometría + Geofencing</p>
-            </div>
-
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-[11px] font-bold text-slate-500 uppercase">Ausencia Injustificada</span>
-                    <i class="fa-solid fa-user-slash text-rose-500 text-lg"></i>
-                </div>
-                <div class="flex items-baseline space-x-1.5">
-                    <span id="kpiUnjustifiedPercent" class="text-2xl font-extrabold text-slate-900 dark:text-white">1.9%</span>
-                    <span id="kpiUnjustifiedCount" class="text-[11px] text-slate-500">(21 casos)</span>
-                </div>
-                <p class="text-[10px] text-rose-500 font-semibold mt-2"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Alertas "Fichar e Irse"</p>
-            </div>
-
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-[11px] font-bold text-slate-500 uppercase">Media Días Baja / Año</span>
-                    <i class="fa-solid fa-calendar-xmark text-amber-500 text-lg"></i>
-                </div>
-                <div class="flex items-baseline space-x-1.5">
-                    <span id="kpiAvgDays" class="text-2xl font-extrabold text-slate-900 dark:text-white">9.8</span>
-                    <span class="text-[11px] text-slate-500">días / emp.</span>
-                </div>
-                <p class="text-[10px] text-slate-500 mt-2">Media Nacional: <strong id="kpiNatAvg">10.8 días</strong></p>
-            </div>
-
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-[11px] font-bold text-slate-500 uppercase">Dietas / Asistencia</span>
-                    <i class="fa-solid fa-file-invoice-dollar text-blue-500 text-lg"></i>
-                </div>
-                <div class="flex items-baseline space-x-1.5">
-                    <span id="kpiDietCompliance" class="text-2xl font-extrabold text-slate-900 dark:text-white">96.4%</span>
-                    <span class="text-[11px] text-emerald-500 font-bold"><i class="fa-solid fa-check"></i> Validado</span>
-                </div>
-                <p class="text-[10px] text-slate-500 mt-2">Vinculado a firma presencial</p>
-            </div>
-
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-[11px] font-bold text-slate-500 uppercase">Efectividad Trámites</span>
-                    <i class="fa-solid fa-bolt text-indigo-500 text-lg"></i>
-                </div>
-                <div class="flex items-baseline space-x-1.5">
-                    <span id="kpiResolutionRate" class="text-2xl font-extrabold text-slate-900 dark:text-white">93.2%</span>
-                </div>
-                <p class="text-[10px] text-indigo-500 font-semibold mt-2"><i class="fa-solid fa-chart-line mr-1"></i>Atención Ciudadana</p>
-            </div>
-        </section>
-
-        <!-- Personnel Composition Breakdown -->
-        <section class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-3">
-                Composición del Personal (Fuente: Registro Central de Personal)
-            </h3>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-                <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <span class="block text-xs text-slate-500 font-semibold">Funcionario de Carrera</span>
-                    <strong id="typeCarrera" class="text-lg font-bold text-emerald-600">62%</strong>
-                </div>
-                <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <span class="block text-xs text-slate-500 font-semibold">Personal Interino</span>
-                    <strong id="typeInterino" class="text-lg font-bold text-blue-600">22%</strong>
-                </div>
-                <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <span class="block text-xs text-slate-500 font-semibold">Personal Laboral</span>
-                    <strong id="typeLaboral" class="text-lg font-bold text-amber-600">12%</strong>
-                </div>
-                <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <span class="block text-xs text-slate-500 font-semibold">Personal Eventual / Asesor</span>
-                    <strong id="typeEventual" class="text-lg font-bold text-rose-600">4%</strong>
-                </div>
-            </div>
-        </section>
-
-        <!-- Charts Section -->
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-                <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1">Presencia Real por Franja Horaria</h3>
-                <p class="text-xs text-slate-500 mb-4">Muestreo activo (08:00 a 15:00)</p>
-                <div class="relative h-64 w-full"><canvas id="hourlyChart"></canvas></div>
-            </div>
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-                <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1">Causas de Ausencia</h3>
-                <p class="text-xs text-slate-500 mb-4">Motivos justificados vs irregulares</p>
-                <div class="relative h-64 w-full flex items-center justify-center"><canvas id="causesChart"></canvas></div>
-            </div>
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-                <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1">Evolución vs Media Nacional</h3>
-                <p class="text-xs text-slate-500 mb-4">Días de ausencia acumulados</p>
-                <div class="relative h-64 w-full"><canvas id="historyChart"></canvas></div>
-            </div>
-        </section>
-
-        <!-- Sub-units Breakdown Table -->
-        <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-            <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h3 id="tableTitle" class="text-base font-bold text-slate-900 dark:text-white">Desglose por Áreas y Servicios Operativos</h3>
-                    <p class="text-xs text-slate-500">Auditoría detallada por sub-unidad funcional</p>
-                </div>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 dark:bg-slate-900/50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-200 dark:border-slate-700">
-                            <th class="py-3.5 px-6">Área / Servicio</th>
-                            <th class="py-3.5 px-6">Plantilla Total</th>
-                            <th class="py-3.5 px-6">Presentes Hoy</th>
-                            <th class="py-3.5 px-6">Ausentes</th>
-                            <th class="py-3.5 px-6 w-1/4">% Presencia Real</th>
-                            <th class="py-3.5 px-6 text-center">Estado Operativo</th>
-                        </tr>
-                    </thead>
-                    <tbody id="subUnitsTable" class="divide-y divide-slate-100 dark:divide-slate-700 text-xs sm:text-sm">
-                        <!-- Injected via JS -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Whistleblowing / Anonymous Report Section -->
-        <section id="denuncia" class="bg-gradient-to-br from-navy-950 via-navy-900 to-slate-900 text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden border border-emerald-500/20">
-            <div class="max-w-3xl relative z-10">
-                <div class="inline-flex items-center space-x-2 bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full text-xs font-semibold border border-amber-500/30 mb-4">
-                    <i class="fa-solid fa-user-ninja"></i>
-                    <span>Canal Seguro de Denuncias Anónimas (Directiva UE 2019/1937 y Ley 2/2023)</span>
-                </div>
-                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-3">
-                    Buzón Cívico de Denuncia Anticorrupción y Abandono
-                </h2>
-                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-6">
-                    Si ha presenciado abandono de puesto, fichaje por terceros o falta de atención al público en cualquier institución de España, envíe su reporte seguro. Cifrado SHA-256 irrestringible.
-                </p>
-
-                <form id="reportForm" class="space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Institución u Organismo Afectado</label>
-                            <input type="text" id="reportEntityInput" required placeholder="Ej. Ayuntamiento / Ministerio / Servicio" class="w-full bg-slate-800/90 border border-slate-700 text-white rounded-xl p-3 text-xs focus:ring-2 focus:ring-amber-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Fecha y Franja Horaria</label>
-                            <input type="datetime-local" required id="reportDate" class="w-full bg-slate-800/90 border border-slate-700 text-white rounded-xl p-3 text-xs focus:ring-2 focus:ring-amber-500">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Descripción de Hechos Irregulares</label>
-                        <textarea id="reportDesc" required rows="3" placeholder="Aporte detalles concretos..." class="w-full bg-slate-800/90 border border-slate-700 text-white rounded-xl p-3 text-xs focus:ring-2 focus:ring-amber-500"></textarea>
-                    </div>
-                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-                        <div class="flex items-center text-[11px] text-slate-400">
-                            <i class="fa-solid fa-lock mr-2 text-emerald-400"></i>
-                            Sin registros de IP ni metadatos. Anonimato total garantizado por ley.
-                        </div>
-                        <button type="submit" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-6 py-3 rounded-xl transition shadow-lg flex items-center justify-center space-x-2 text-xs">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            <span>Registrar Denuncia Cifrada</span>
-                        </button>
-                    </div>
-                </form>
-
-                <div id="reportSuccess" class="hidden mt-6 bg-emerald-500/20 border border-emerald-500/40 text-emerald-200 p-4 rounded-xl text-xs flex items-start space-x-3">
-                    <i class="fa-solid fa-circle-check text-xl text-emerald-400 mt-0.5"></i>
-                    <div>
-                        <strong class="font-bold text-white block">Denuncia registrada con hash criptográfico</strong>
-                        Código de seguimiento: <span class="font-mono text-amber-300 font-bold" id="reportCode">#ES-2026-9912</span>.
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Modal Sources -->
-    <div id="sourcesModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-slate-800 max-w-2xl w-full rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-700 space-y-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-3">
-                <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center">
-                    <i class="fa-solid fa-database text-emerald-500 mr-2"></i> Fuentes de Datos Oficiales y Metodología
-                </h3>
-                <button onclick="toggleSourcesModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div class="space-y-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                <p>El <strong>Portal Nacional de Transparencia del Empleo Público</strong> se nutre de agregaciones oficiales en España:</p>
-                <ul class="list-disc pl-5 space-y-2">
-                    <li><strong>Registro Central de Personal (RCP):</strong> Ministerio para la Transformación Digital y de la Función Pública.</li>
-                    <li><strong>BEPSAP:</strong> Boletín Estadístico del Personal al Servicio de las Administraciones Públicas.</li>
-                    <li><strong>Sistemas de Fichaje Biométrico Antifraude:</strong> Verificación por geofencing e identificación unívoca.</li>
-                    <li><strong>Datos.gob.es:</strong> Catálogo de las 17 Comunidades Autónomas y 50 provincias.</li>
-                </ul>
-            </div>
-            <div class="pt-3 border-t border-slate-100 dark:border-slate-700 text-right">
-                <button onclick="toggleSourcesModal()" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Entendido</button>
-            </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-2 h-full bg-amber-500"></div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Índice de Ausentismo</p>
+          <p id="stat-ausentismo" class="text-3xl font-black text-slate-900 mt-2">--%</p>
+          <p class="text-xs text-amber-600 font-medium mt-1">Bajas y Licencias Ajustadas</p>
         </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-navy-900 text-slate-400 text-xs py-8 border-t border-slate-800 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center sm:text-left sm:flex sm:justify-between sm:items-center space-y-4 sm:space-y-0">
-            <div>
-                <p class="font-bold text-slate-200">Portal Nacional de Transparencia del Empleo Público • España</p>
-                <p class="mt-1">Auditoría Cívica e Inspección de Servicios Digitales</p>
-            </div>
-            <div class="flex justify-center sm:justify-end space-x-6 text-[11px]">
-                <a href="#" onclick="toggleSourcesModal(); return false;" class="hover:text-white transition">Fuentes Oficiales</a>
-                <a href="#denuncia" class="hover:text-white transition">Buzón Antifraude</a>
-            </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-2 h-full bg-blue-500"></div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Alertas Ciudadanas</p>
+          <p id="stat-alertas" class="text-3xl font-black text-slate-900 mt-2">--</p>
+          <p class="text-xs text-blue-600 font-medium mt-1">Reportes Anónimos Ley 2/2023</p>
         </div>
-    </footer>
+      </div>
 
-    <!-- JavaScript Application Logic -->
-    <script>
-        let selectedState = {
-            adminType: 'locales',
-            province: 'madrid',
-            entity: 'madrid_ayto',
-            department: 'all'
-        };
+      <!-- GRÁFICO Y BUZÓN ÉTICO -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider">Distribución del Personal / Escaños</h3>
+          <div class="w-full max-w-[210px] mx-auto">
+            <canvas id="chartPresencia"></canvas>
+          </div>
+        </div>
+        
+        <div class="bg-slate-900 text-white p-6 rounded-xl flex flex-col justify-between h-full shadow-md">
+          <div>
+            <span class="bg-blue-500/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider border border-blue-500/30">Canal Ético Cifrado</span>
+            <h4 class="text-base font-bold mt-3 mb-2">Buzón Antifraude Anónimo</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              ¿Puestos vacíos, escaños sin asistencia o ausentismo injustificado en esta unidad? Envía una alerta geolocalizada conforme a la Ley 2/2023.
+            </p>
+          </div>
+          <button onclick="alert('Abriendo interfaz cifrada del Buzón Antifraude...')" class="mt-5 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs py-3 rounded-lg transition-all shadow-md active:scale-95">
+            Registrar Incidencia Anónima
+          </button>
+        </div>
+      </div>
 
-        let autoRefreshInterval = null;
-        let timerSeconds = 10;
-        let hourlyChart = null;
-        let causesChart = null;
-        let historyChart = null;
+      <!-- METODOLOGÍA Y FUENTES OFICIALES -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <h3 class="text-sm font-bold text-slate-900 mb-2">Metodología y Veracidad de Datos</h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Los datos mostrados se basan en registros consolidados oficiales (Registro Central de Personal, BEPSAP, Diarios de Sesiones y datos.gob.es) combinados con los sistemas de fichaje de nueva generación (geofencing, biometría unívoca y control de presencia en escaños).
+        </p>
+      </div>
 
-        // Base de datos completa con las 50 provincias y organismos reales corregidos
-        const masterDatabase = {
-            locales: {
-                label: "Entidades Locales (Ayuntamientos / Provincias)",
-                provinces: {
-                    madrid: {
-                        name: "Madrid (Provincia)",
-                        entities: {
-                            madrid_ayto: {
-                                name: "Ayuntamiento de Madrid",
-                                depts: [
-                                    { name: "Urbanismo y Licencias", total: 180, active: 156, absent: 24 },
-                                    { name: "Policía Municipal / Seguridad", total: 320, active: 304, absent: 16 },
-                                    { name: "Servicios Sociales y Familias", total: 140, active: 116, absent: 24 },
-                                    { name: "Línea Madrid y Padrón", total: 90, active: 76, absent: 14 }
-                                ],
-                                activePct: "86.1%", activeCount: "(937/1090)", unjustPct: "1.9%", unjustCount: "(21 casos)", avgDays: "9.8", natAvg: "10.8", diet: "96.4%", resRate: "93.2%",
-                                causes: [70, 15, 10, 5], history: [10.2, 11.5, 9.8, 9.1, 8.8, 9.5, 12.1, 14.2, 9.6, 9.8], hourly: [15, 88, 96, 94, 91, 85, 75, 30],
-                                types: { carrera: "62%", interino: "22%", laboral: "12%", eventual: "4%" }
-                            }
-                        }
-                    },
-                    barcelona: {
-                        name: "Barcelona (Provincia)",
-                        entities: {
-                            bcn_ayto: {
-                                name: "Ayuntamiento de Barcelona",
-                                depts: [
-                                    { name: "Gerència d'Urbanisme", total: 160, active: 138, absent: 22 },
-                                    { name: "Guàrdia Urbana", total: 290, active: 274, absent: 16 },
-                                    { name: "Oficines d'Atenció Ciutadana (OAC)", total: 85, active: 70, absent: 15 }
-                                ],
-                                activePct: "85.8%", activeCount: "(864/1008)", unjustPct: "2.1%", unjustCount: "(21 casos)", avgDays: "10.0", natAvg: "10.8", diet: "95.8%", resRate: "92.0%",
-                                causes: [68, 18, 9, 5], history: [10.5, 11.8, 10.0, 9.4, 9.0, 9.8, 12.5, 14.8, 10.0, 10.0], hourly: [14, 86, 94, 92, 88, 82, 70, 25],
-                                types: { carrera: "60%", interino: "24%", laboral: "11%", eventual: "5%" }
-                            }
-                        }
-                    },
-                    valencia: {
-                        name: "Valencia / València",
-                        entities: {
-                            val_ayto: {
-                                name: "Ayuntamiento de Valencia",
-                                depts: [
-                                    { name: "Urbanismo y Licencias", total: 120, active: 104, absent: 16 },
-                                    { name: "Policía Local", total: 210, active: 198, absent: 12 },
-                                    { name: "Padrón y Estadística", total: 60, active: 52, absent: 8 }
-                                ],
-                                activePct: "87.5%", activeCount: "(354/390)", unjustPct: "1.5%", unjustCount: "(6 casos)", avgDays: "9.5", natAvg: "10.8", diet: "97.0%", resRate: "94.0%",
-                                causes: [72, 14, 9, 5], history: [9.8, 10.2, 9.5, 9.0, 8.5, 9.2, 11.0, 13.0, 9.5, 9.5], hourly: [12, 85, 95, 93, 90, 84, 72, 28],
-                                types: { carrera: "65%", interino: "20%", laboral: "11%", eventual: "4%" }
-                            }
-                        }
-                    },
-                    coruna: {
-                        name: "A Coruña",
-                        entities: {
-                            coruna_ayto: {
-                                name: "Ayuntamiento de A Coruña",
-                                depts: [
-                                    { name: "Urbanismo y Obras", total: 95, active: 82, absent: 13 },
-                                    { name: "Policía Local", total: 180, active: 170, absent: 10 },
-                                    { name: "Atención Ciudadana y Padrón", total: 50, active: 44, absent: 6 }
-                                ],
-                                activePct: "88.2%", activeCount: "(296/325)", unjustPct: "1.4%", unjustCount: "(4 casos)", avgDays: "9.2", natAvg: "10.8", diet: "97.5%", resRate: "94.5%",
-                                causes: [74, 13, 8, 5], history: [9.5, 10.0, 9.2, 8.8, 8.2, 9.0, 10.5, 12.5, 9.2, 9.2], hourly: [10, 84, 96, 94, 91, 86, 74, 25],
-                                types: { carrera: "66%", interino: "20%", laboral: "10%", eventual: "4%" }
-                            }
-                        }
-                    },
-                    sevilla: {
-                        name: "Sevilla",
-                        entities: {
-                            sev_ayto: {
-                                name: "Ayuntamiento de Sevilla",
-                                depts: [
-                                    { name: "Urbanismo", total: 110, active: 94, absent: 16 },
-                                    { name: "Policía Local", total: 240, active: 225, absent: 15 },
-                                    { name: "Servicios Sociales", total: 80, active: 68, absent: 12 }
-                                ],
-                                activePct: "87.0%", activeCount: "(387/430)", unjustPct: "1.8%", unjustCount: "(8 casos)", avgDays: "9.9", natAvg: "10.8", diet: "96.5%", resRate: "92.8%",
-                                causes: [70, 16, 9, 5], history: [10.0, 11.0, 9.9, 9.2, 8.9, 9.6, 11.8, 13.9, 9.8, 9.9], hourly: [15, 87, 95, 93, 89, 83, 71, 29],
-                                types: { carrera: "63%", interino: "21%", laboral: "12%", eventual: "4%" }
-                            }
-                        }
-                    }
-                }
-            },
-            age: {
-                label: "Administración General del Estado (AGE)",
-                provinces: {
-                    nacional: {
-                        name: "Servicios Centrales y Ministerios",
-                        entities: {
-                            min_hacienda: {
-                                name: "Ministerio de Hacienda y Función Pública / AEAT",
-                                depts: [
-                                    { name: "Agencia Tributaria (Inspección y Gestión)", total: 310, active: 288, absent: 22 },
-                                    { name: "Catastro Inmobiliario", total: 110, active: 96, absent: 14 },
-                                    { name: "Intervención General de la Administración del Estado", total: 85, active: 78, absent: 7 }
-                                ],
-                                activePct: "90.8%", activeCount: "(462/505)", unjustPct: "0.8%", unjustCount: "(4 casos)", avgDays: "8.2", natAvg: "10.8", diet: "98.8%", resRate: "96.5%",
-                                causes: [78, 10, 5, 7], history: [8.0, 8.9, 8.2, 7.8, 7.5, 8.1, 10.0, 11.5, 8.2, 8.2], hourly: [20, 92, 98, 96, 94, 90, 82, 40],
-                                types: { carrera: "75%", interino: "14%", laboral: "9%", eventual: "2%" }
-                            },
-                            min_interior: {
-                                name: "Ministerio del Interior (Policía / Guardia Civil / DGT)",
-                                depts: [
-                                    { name: "Dirección General de la Policía (DGP)", total: 450, active: 425, absent: 25 },
-                                    { name: "Guardia Civil (Jefatura y Unidades)", total: 400, active: 378, absent: 22 },
-                                    { name: "Dirección General de Tráfico (DGT)", total: 200, active: 182, absent: 18 },
-                                    { name: "Instituciones Penitenciarias", total: 350, active: 320, absent: 30 }
-                                ],
-                                activePct: "92.2%", activeCount: "(1305/1400)", unjustPct: "1.1%", unjustCount: "(15 casos)", avgDays: "8.9", natAvg: "10.8", diet: "98.0%", resRate: "95.0%",
-                                causes: [75, 12, 6, 7], history: [8.5, 9.2, 8.9, 8.4, 8.0, 8.7, 10.5, 12.0, 8.8, 8.9], hourly: [25, 94, 99, 97, 95, 92, 85, 50],
-                                types: { carrera: "80%", interino: "10%", laboral: "8%", eventual: "2%" }
-                            },
-                            min_trabajo: {
-                                name: "Ministerio de Trabajo y SEPE",
-                                depts: [
-                                    { name: "Servicio Público de Empleo Estatal (SEPE)", total: 280, active: 245, absent: 35 },
-                                    { name: "Inspección de Trabajo y Seguridad Social", total: 120, active: 110, absent: 10 }
-                                ],
-                                activePct: "87.5%", activeCount: "(355/400)", unjustPct: "1.8%", unjustCount: "(7 casos)", avgDays: "9.7", natAvg: "10.8", diet: "96.0%", resRate: "92.5%",
-                                causes: [70, 16, 9, 5], history: [9.5, 10.5, 9.7, 9.0, 8.6, 9.3, 11.5, 13.5, 9.6, 9.7], hourly: [15, 88, 96, 94, 90, 84, 73, 30],
-                                types: { carrera: "65%", interino: "23%", laboral: "9%", eventual: "3%" }
-                            }
-                        }
-                    }
-                }
-            },
-            ccaa: {
-                label: "Comunidades Autónomas (17 CCAA)",
-                provinces: {
-                    galicia: {
-                        name: "Galicia (Xunta de Galicia)",
-                        entities: {
-                            sergas: {
-                                name: "SERGAS (Servicio Galego de Saúde)",
-                                depts: [
-                                    { name: "Atención Primaria / Centros de Saúde", total: 320, active: 285, absent: 35 },
-                                    { name: "Urgencias Hospitalarias", total: 210, active: 196, absent: 14 },
-                                    { name: "Consultas Especializadas", total: 180, active: 160, absent: 20 }
-                                ],
-                                activePct: "89.2%", activeCount: "(641/710)", unjustPct: "1.5%", unjustCount: "(11 casos)", avgDays: "9.1", natAvg: "10.8", diet: "97.2%", resRate: "94.8%",
-                                causes: [73, 14, 8, 5], history: [9.0, 9.8, 9.1, 8.6, 8.2, 8.9, 10.8, 12.8, 9.0, 9.1], hourly: [18, 90, 97, 95, 92, 87, 78, 35],
-                                types: { carrera: "58%", interino: "30%", laboral: "10%", eventual: "2%" }
-                            },
-                            educacion_gal: {
-                                name: "Consellería de Educación (Centros Docentes)",
-                                depts: [
-                                    { name: "Centros de Educación Infantil y Primaria (CEIP)", total: 250, active: 220, absent: 30 },
-                                    { name: "Institutos de Educación Secundaria (IES)", total: 220, active: 194, absent: 26 },
-                                    { name: "Inspección Educativa", total: 40, active: 38, absent: 2 }
-                                ],
-                                activePct: "88.3%", activeCount: "(452/510)", unjustPct: "1.6%", unjustCount: "(8 casos)", avgDays: "9.4", natAvg: "10.8", diet: "97.0%", resRate: "93.9%",
-                                causes: [72, 15, 8, 5], history: [9.2, 10.1, 9.4, 8.9, 8.4, 9.1, 11.2, 13.0, 9.3, 9.4], hourly: [10, 89, 98, 96, 93, 88, 76, 20],
-                                types: { carrera: "65%", interino: "25%", laboral: "8%", eventual: "2%" }
-                            }
-                        }
-                    },
-                    andalucia: {
-                        name: "Andalucía (Junta de Andalucía)",
-                        entities: {
-                            sas: {
-                                name: "Servicio Andaluz de Salud (SAS)",
-                                depts: [
-                                    { name: "Atención Primaria", total: 380, active: 335, absent: 45 },
-                                    { name: "Hospitales y Urgencias", total: 450, active: 410, absent: 40 }
-                                ],
-                                activePct: "88.6%", activeCount: "(745/830)", unjustPct: "1.7%", unjustCount: "(14 casos)", avgDays: "9.3", natAvg: "10.8", diet: "96.8%", resRate: "94.0%",
-                                causes: [71, 15, 9, 5], history: [9.1, 10.0, 9.3, 8.8, 8.3, 9.0, 11.0, 13.0, 9.2, 9.3], hourly: [16, 89, 96, 94, 91, 86, 76, 32],
-                                types: { carrera: "56%", interino: "32%", laboral: "10%", eventual: "2%" }
-                            }
-                        }
-                    },
-                    madrid_ccaa: {
-                        name: "Comunidad de Madrid",
-                        entities: {
-                            sermas: {
-                                name: "SERMAS (Servicio Madrileño de Salud)",
-                                depts: [
-                                    { name: "Centros de Salud de Atención Primaria", total: 290, active: 258, absent: 32 },
-                                    { name: "Hospitales Públicos y SUMMA 112", total: 410, active: 375, absent: 35 }
-                                ],
-                                activePct: "89.5%", activeCount: "(633/700)", unjustPct: "1.4%", unjustCount: "(10 casos)", avgDays: "9.0", natAvg: "10.8", diet: "97.5%", resRate: "95.1%",
-                                causes: [74, 13, 8, 5], history: [8.9, 9.7, 9.0, 8.5, 8.0, 8.8, 10.6, 12.5, 8.9, 9.0], hourly: [19, 91, 98, 96, 93, 88, 79, 36],
-                                types: { carrera: "59%", interino: "28%", laboral: "11%", eventual: "2%" }
-                            }
-                        }
-                    }
-                }
-            },
-            universidades: {
-                label: "Universidades Públicas",
-                provinces: {
-                    nacional: {
-                        name: "Red Universitaria Estatal",
-                        entities: {
-                            usc: {
-                                name: "Universidad de Santiago de Compostela (USC)",
-                                depts: [
-                                    { name: "PAS - Servicios de Administración Central", total: 110, active: 98, absent: 12 },
-                                    { name: "PAS - Secretarías de Facultad", total: 70, active: 62, absent: 8 },
-                                    { name: "PDI - Docencia Presencial y Tutorías", total: 210, active: 195, absent: 15 }
-                                ],
-                                activePct: "90.0%", activeCount: "(355/390)", unjustPct: "1.2%", unjustCount: "(5 casos)", avgDays: "8.5", natAvg: "10.8", diet: "98.0%", resRate: "95.5%",
-                                causes: [76, 12, 7, 5], history: [8.3, 9.0, 8.5, 8.0, 7.6, 8.2, 10.1, 11.8, 8.4, 8.5], hourly: [15, 90, 97, 95, 92, 87, 78, 30],
-                                types: { carrera: "60%", interino: "15%", laboral: "20%", eventual: "5%" }
-                            },
-                            ucm: {
-                                name: "Universidad Complutense de Madrid (UCM)",
-                                depts: [
-                                    { name: "PAS - Rectorado y Gestión", total: 150, active: 132, absent: 18 },
-                                    { name: "PDI - Facultades Moncloa y Somosaguas", total: 320, active: 295, absent: 25 }
-                                ],
-                                activePct: "89.4%", activeCount: "(427/470)", unjustPct: "1.3%", unjustCount: "(6 casos)", avgDays: "8.7", natAvg: "10.8", diet: "97.8%", resRate: "94.8%",
-                                causes: [75, 13, 7, 5], history: [8.5, 9.2, 8.7, 8.2, 7.8, 8.4, 10.3, 12.0, 8.6, 8.7], hourly: [14, 89, 96, 94, 91, 86, 77, 28],
-                                types: { carrera: "62%", interino: "14%", laboral: "19%", eventual: "5%" }
-                            },
-                            ub: {
-                                name: "Universitat de Barcelona (UB)",
-                                depts: [
-                                    { name: "PAS - Administració i Serveis", total: 140, active: 124, absent: 16 },
-                                    { name: "PDI - Activitat Docent i Investigadora", total: 300, active: 278, absent: 22 }
-                                ],
-                                activePct: "89.8%", activeCount: "(402/440)", unjustPct: "1.2%", unjustCount: "(5 casos)", avgDays: "8.6", natAvg: "10.8", diet: "97.9%", resRate: "95.0%",
-                                causes: [76, 12, 7, 5], history: [8.4, 9.1, 8.6, 8.1, 7.7, 8.3, 10.2, 11.9, 8.5, 8.6], hourly: [15, 90, 97, 95, 92, 87, 78, 29],
-                                types: { carrera: "61%", interino: "15%", laboral: "19%", eventual: "5%" }
-                            }
-                        }
-                    }
-                }
-            },
-            empresas: {
-                label: "Empresas Públicas y Entes Sectoriales",
-                provinces: {
-                    nacional: {
-                        name: "Sector Público Empresarial Estatal",
-                        entities: {
-                            correos: {
-                                name: "Sociedad Estatal Correos y Telégrafos S.A.",
-                                depts: [
-                                    { name: "Unidades de Reparto (Cartería)", total: 380, active: 338, absent: 42 },
-                                    { name: "Oficinas de Atención al Público", total: 210, active: 190, absent: 20 },
-                                    { name: "Centros de Tratamiento Automatizado (CTA)", total: 150, active: 136, absent: 14 }
-                                ],
-                                activePct: "89.0%", activeCount: "(664/740)", unjustPct: "1.6%", unjustCount: "(12 casos)", avgDays: "9.2", natAvg: "10.8", diet: "97.0%", resRate: "94.2%",
-                                causes: [72, 14, 9, 5], history: [9.0, 9.9, 9.2, 8.7, 8.3, 9.0, 10.9, 12.8, 9.1, 9.2], hourly: [18, 91, 97, 95, 92, 87, 79, 35],
-                                types: { carrera: "15%", interino: "20%", laboral: "62%", eventual: "3%" }
-                            },
-                            renfe: {
-                                name: "Grupo Renfe / Adif",
-                                depts: [
-                                    { name: "Atención al Cliente y Taquillas en Estaciones", total: 190, active: 172, absent: 18 },
-                                    { name: "Tripulación y Operaciones Ferroviarias", total: 280, active: 260, absent: 20 },
-                                    { name: "Mantenimiento y Talleres", total: 160, active: 144, absent: 16 }
-                                ],
-                                activePct: "90.7%", activeCount: "(576/635)", unjustPct: "1.3%", unjustCount: "(8 casos)", avgDays: "8.8", natAvg: "10.8", diet: "98.2%", resRate: "95.6%",
-                                causes: [75, 12, 8, 5], history: [8.6, 9.4, 8.8, 8.3, 7.9, 8.6, 10.5, 12.2, 8.7, 8.8], hourly: [20, 93, 98, 96, 93, 89, 81, 38],
-                                types: { carrera: "20%", interino: "15%", laboral: "61%", eventual: "4%" }
-                            },
-                            rtve: {
-                                name: "Corporación RTVE",
-                                depts: [
-                                    { name: "Centros Territoriales de Informativos", total: 120, active: 108, absent: 12 },
-                                    { name: "Producción y Técnicos de Emisión", total: 180, active: 162, absent: 18 }
-                                ],
-                                activePct: "89.3%", activeCount: "(270/300)", unjustPct: "1.5%", unjustCount: "(5 casos)", avgDays: "9.0", natAvg: "10.8", diet: "97.5%", resRate: "94.5%",
-                                causes: [73, 14, 8, 5], history: [8.8, 9.6, 9.0, 8.5, 8.1, 8.8, 10.7, 12.5, 8.9, 9.0], hourly: [16, 90, 97, 95, 92, 87, 78, 32],
-                                types: { carrera: "45%", interino: "25%", laboral: "25%", eventual: "5%" }
-                            }
-                        }
-                    }
-                }
-            }
-        };
+    </section>
+  </main>
 
-        // Complete list of 50 provinces + Ceuta/Melilla for Locales
-        const spanishProvincesByCCAA = {
-            "Andalucía": [
-                { id: "almeria", name: "Almería" }, { id: "cadiz", name: "Cádiz" }, { id: "cordoba", name: "Córdoba" }, { id: "granada", name: "Granada" },
-                { id: "huelva", name: "Huelva" }, { id: "jaen", name: "Jaén" }, { id: "malaga", name: "Málaga" }, { id: "sevilla", name: "Sevilla" }
-            ],
-            "Aragón": [{ id: "huesca", name: "Huesca" }, { id: "teruel", name: "Teruel" }, { id: "zaragoza", name: "Zaragoza" }],
-            "Principado de Asturias": [{ id: "asturias", name: "Asturias" }],
-            "Illes Balears": [{ id: "baleares", name: "Islas Baleares" }],
-            "Canarias": [{ id: "las_palmas", name: "Las Palmas" }, { id: "santa_cruz_tenerife", name: "Santa Cruz de Tenerife" }],
-            "Cantabria": [{ id: "cantabria", name: "Cantabria" }],
-            "Castilla y León": [
-                { id: "avila", name: "Ávila" }, { id: "burgos", name: "Burgos" }, { id: "leon", name: "León" }, { id: "palencia", name: "Palencia" },
-                { id: "salamanca", name: "Salamanca" }, { id: "segovia", name: "Segovia" }, { id: "soria", name: "Soria" }, { id: "valladolid", name: "Valladolid" }, { id: "zamora", name: "Zamora" }
-            ],
-            "Castilla-La Mancha": [{ id: "albacete", name: "Albacete" }, { id: "ciudad_real", name: "Ciudad Real" }, { id: "cuenca", name: "Cuenca" }, { id: "guadalajara", name: "Guadalajara" }, { id: "toledo", name: "Toledo" }],
-            "Cataluña / Catalunya": [{ id: "barcelona", name: "Barcelona" }, { id: "girona", name: "Girona" }, { id: "lleida", name: "Lleida" }, { id: "tarragona", name: "Tarragona" }],
-            "Comunitat Valenciana": [{ id: "alicante", name: "Alicante / Alacant" }, { id: "castellon", name: "Castellón / Castelló" }, { id: "valencia", name: "Valencia / València" }],
-            "Extremadura": [{ id: "badajoz", name: "Badajoz" }, { id: "caceres", name: "Cáceres" }],
-            "Galicia": [{ id: "coruna", name: "A Coruña" }, { id: "lugo", name: "Lugo" }, { id: "ourense", name: "Ourense" }, { id: "pontevedra", name: "Pontevedra" }],
-            "Comunidad de Madrid": [{ id: "madrid", name: "Madrid" }],
-            "Región de Murcia": [{ id: "murcia", name: "Murcia" }],
-            "Comunidad Foral de Navarra": [{ id: "navarra", name: "Navarra" }],
-            "País Vasco / Euskadi": [{ id: "alava", name: "Álava / Araba" }, { id: "guipuzcoa", name: "Guipúzcoa / Gipuzkoa" }, { id: "vizcaya", name: "Vizcaya / Bizkaia" }],
-            "La Rioja": [{ id: "rioja", name: "La Rioja" }],
-            "Ciudades Autónomas": [{ id: "ceuta", name: "Ceuta" }, { id: "melilla", name: "Melilla" }]
-        };
-
-        // Generator for synthetic realistic data when clicking other entities
-        function generateEntityData(entityName) {
-            return {
-                name: entityName,
-                depts: [
-                    { name: "Atención Ciudadana y Registro", total: 100, active: 88, absent: 12 },
-                    { name: "Servicios Técnicos y Gestión", total: 150, active: 134, absent: 16 },
-                    { name: "Área de Coordinación e Inspección", total: 80, active: 72, absent: 8 }
-                ],
-                activePct: "88.5%", activeCount: "(294/330)", unjustPct: "1.5%", unjustCount: "(5 casos)",
-                avgDays: "9.4", natAvg: "10.8", diet: "97.0%", resRate: "94.0%",
-                causes: [72, 15, 8, 5], history: [9.2, 10.0, 9.4, 8.8, 8.4, 9.1, 11.2, 13.0, 9.3, 9.4],
-                hourly: [15, 88, 96, 94, 91, 86, 75, 30],
-                types: { carrera: "63%", interino: "21%", laboral: "12%", eventual: "4%" }
-            };
+  <!-- LÓGICA JAVASCRIPT AMPLIADA -->
+  <script>
+    const territorialData = {
+      constitucional: {
+        label: "Órganos Constitucionales y Cortes",
+        organismos: [
+          { id: "congreso", name: "Congreso de los Diputados", areas: ["Sesiones Plenarias y Votaciones", "Comisión Constitucional", "Comisión de Hacienda y Función Pública", "Diputación Permanente"] },
+          { id: "senado", name: "Senado de España", areas: ["Pleno del Senado", "Comisión General de Comunidades Autónomas", "Comisión de Entidades Locales"] },
+          { id: "cgpj", name: "Consejado General del Poder Judicial (CGPJ)", areas: ["Pleno del CGPJ", "Comisión Permanente", "Servicio de Inspección"] },
+          { id: "tribunal_constitucional", name: "Tribunal Constitucional", areas: ["Pleno", "Salas de Garantías", "Secretaría General"] }
+        ]
+      },
+      age: {
+        label: "A.G.E. (Ministerios y Organismos)",
+        organismos: [
+          { id: "hacienda", name: "Ministerio de Hacienda y Función Pública / AEAT", areas: ["Gestión Tributaria", "Inspección Financiera", "Aduanas e Impuestos Especiales", "Recaudación Ejecutiva"] },
+          { id: "interior", name: "Ministerio del Interior (Policía / Guardia Civil / DGT)", areas: ["Seguridad Ciudadana", "Extranjería y Fronteras", "Tráfico y DGT", "Instituciones Penitenciarias"] },
+          { id: "sanidad", name: "Ministerio de Sanidad / INGESA", areas: ["Salud Pública", "Agencia del Medicamento (AEMPS)", "Inspección Sanitaria"] },
+          { id: "trabajo", name: "Ministerio de Trabajo / SEPE", areas: ["Prestaciones por Desempleo", "Inspección de Trabajo", "Atención Presencial"] },
+          { id: "inclusion", name: "Seguridad Social (INSS / TGSS)", areas: ["Atención CAISS (Pensiones/IMV)", "Tesorería General", "Recaudación"] },
+          { id: "transportes", name: "Ministerio de Transportes y Movilidad Sostenible", areas: ["Carreteras", "Marina Mercante", "Supervisión Ferroviaria"] },
+          { id: "justicia", name: "Ministerio de Justicia", areas: ["Registro Civil Central", "Atención al Ciudadano", "Gerencias Territoriales"] }
+        ]
+      },
+      ccaa: {
+        label: "Comunidades Autónomas",
+        territorios: {
+          galicia: {
+            name: "Galicia (Xunta de Galicia)",
+            organismos: [
+              { id: "sergas", name: "SERGAS (Servicio Galego de Saúde)", areas: ["Atención Primaria / Centros de Saúde", "Urgencias Hospitalarias", "Consultas Especializadas"] },
+              { id: "educacion_gal", name: "Consellería de Educación, Ciencia e Universidades", areas: ["Centros Docentes Públicos", "Inspección Educativa", "Servicios Centrales"] },
+              { id: "parlamento_galicia", name: "Parlamento de Galicia", areas: ["Pleno", "Comisiones Legislativas", "Diputación Permanente"] }
+            ]
+          },
+          madrid_ccaa: {
+            name: "Comunidad de Madrid",
+            organismos: [
+              { id: "sermas", name: "SERMAS (Servicio Madrileño de Salud)", areas: ["Centros de Salud", "Hospitales Públicos", "SUMMA 112"] },
+              { id: "asamblea_madrid", name: "Asamblea de Madrid", areas: ["Pleno de la Asamblea", "Comisiones de Investigación y Control"] }
+            ]
+          },
+          andalucia: {
+            name: "Andalucía (Junta de Andalucía)",
+            organismos: [
+              { id: "sas", name: "SAS (Servicio Andaluz de Salud)", areas: ["Atención Primaria", "Hospitales", "Urgencias"] },
+              { id: "parlamento_andalucia", name: "Parlamento de Andalucía", areas: ["Pleno", "Comisiones Permanentes"] }
+            ]
+          },
+          catalunya: {
+            name: "Catalunya (Generalitat)",
+            organismos: [
+              { id: "ics", name: "ICS (Institut Català de la Salut)", areas: ["CAPs (Atenció Primària)", "Hospitals Públics", "Atenció Continuada"] },
+              { id: "parlament_catalunya", name: "Parlament de Catalunya", areas: ["Ple", "Comissions Legislatives"] }
+            ]
+          },
+          valencia: {
+            name: "Comunitat Valenciana",
+            organismos: [
+              { id: "gva_sanitat", name: "Conselleria de Sanitat (Sanitat Valenciana)", areas: ["Departaments de Salut", "Atenció Primària"] }
+            ]
+          },
+          euskadi: {
+            name: "País Vasco / Euskadi",
+            organismos: [
+              { id: "osakidetza", name: "Osakidetza (Servicio Vasco de Salud)", areas: ["Hospitales y Comarcas Sanitarias"] },
+              { id: "parlamento_vasco", name: "Parlamento Vasco / Eusko Legebiltzarra", areas: ["Pleno y Comisiones"] }
+            ]
+          },
+          // Otras CCAA integradas genéricamente para cubrir las 17
+          otras_ccaa: {
+            name: "Otras CCAA (Asturias, Aragón, Castilla y León, Castilla-La Mancha, Canarias, Cantabria, Extremadura, Baleares, Murcia, Navarra, La Rioja, Ceuta y Melilla)",
+            organismos: [
+              { id: "servicios_ccaa", name: "Administración Autonómica General y Salud", areas: ["Servicios Centrales", "Atención Sanitaria", "Educación y Empleo"] }
+            ]
+          }
         }
+      },
+      locales: {
+        label: "Entidades Locales (Ayuntamientos y Diputaciones)",
+        organismos: [
+          { id: "atencion_ciudadana", name: "Oficinas de Atención Ciudadana (OAC / Padrón)", areas: ["Registro y Padrón Municipal", "Licencias y Urbanismo", "Servicios Sociales de Base"] },
+          { id: "policia_local", name: "Policía Local / Seguridad Ciudadana", areas: ["Patrulla de Barrio / Atestados", "Tráfico y Movilidad", "Policía Administrativa"] },
+          { id: "obras_mantenimiento", name: "Brigadas Municipales de Obras y Servicios", areas: ["Mantenimiento Urbano", "Jardines y Vías Públicas", "Almacén Municipal"] },
+          { id: "pleno_ayto", name: "Corporación Municipal y Órganos de Gobierno", areas: ["Pleno Municipal", "Comisión Informativa de Urbanismo", "Comisión de Hacienda", "Junta de Gobierno Local"] }
+        ]
+      },
+      universidades: {
+        label: "Universidades Públicas",
+        organismos: [
+          { id: "usc", name: "Universidad de Santiago de Compostela (USC)", areas: ["PAS - Administración Central", "PAS - Secretarías de Facultad", "PDI - Docencia y Tutorías"] },
+          { id: "ucm", name: "Universidad Complutense de Madrid (UCM)", areas: ["PAS - Rectorado y Gestión", "PDI - Docencia"] },
+          { id: "ub", name: "Universitat de Barcelona (UB)", areas: ["PAS - Administració i Gestió", "PDI - Activitat Docent"] },
+          { id: "uvigo", name: "Universidade de Vigo (UVigo)", areas: ["PAS y PDI Campus Central"] }
+        ]
+      },
+      empresas_publicas: {
+        label: "Empresas Públicas",
+        organismos: [
+          { id: "correos", name: "Sociedad Estatal Correos y Telégrafos", areas: ["Unidades de Reparto (Cartería)", "Oficinas de Atención al Público", "Centros de Tratamiento (CTA)"] },
+          { id: "renfe", name: "Grupo Renfe / Adif", areas: ["Atención al Cliente en Estaciones", "Taquillas y Venta", "Mantenimiento"] },
+          { id: "rtve", name: "Corporación RTVE", areas: ["Centros Territoriales", "Servicios Informativos y Producción"] },
+          { id: "aena", name: "AENA / ENAIRE", areas: ["Operaciones Aeroportuarias", "Atención a Pasajeros"] }
+        ]
+      }
+    };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            setupThemeToggle();
-            setupLiveToggle();
-            populateProvinces();
-            setupListeners();
-            startCountdown();
+    let chartInstance = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const ctx = document.getElementById('chartPresencia').getContext('2d');
+      chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Presencia Efectiva / Asistencia', 'Ausentismo'],
+          datasets: [{
+            data: [88, 12],
+            backgroundColor: ['#10b981', '#f59e0b'],
+            borderWidth: 0
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
+      });
+      window.myChart = chartInstance;
+    });
+
+    function onNivelChange() {
+      const nivel = document.getElementById("select-nivel").value;
+      const wrapTerritorio = document.getElementById("wrapper-territorio");
+      const wrapOrg = document.getElementById("wrapper-organismo");
+      const wrapArea = document.getElementById("wrapper-area");
+
+      wrapTerritorio.classList.add("hidden");
+      wrapOrg.classList.add("hidden");
+      wrapArea.classList.add("hidden");
+
+      if (!nivel) return;
+
+      if (nivel === "ccaa") {
+        wrapTerritorio.classList.remove("hidden");
+        const selectTerr = document.getElementById("select-territorio");
+        selectTerr.innerHTML = '<option value="">-- Selecciona Comunidad Autónoma --</option>';
+        Object.keys(territorialData.ccaa.territorios).forEach(key => {
+          const opt = document.createElement("option");
+          opt.value = key;
+          opt.textContent = territorialData.ccaa.territorios[key].name;
+          selectTerr.appendChild(opt);
         });
+      } else {
+        wrapOrg.classList.remove("hidden");
+        fillOrganismos(territorialData[nivel].organismos);
+      }
+    }
 
-        function toggleSourcesModal() {
-            document.getElementById('sourcesModal').classList.toggle('hidden');
-        }
+    function onTerritorioChange() {
+      const terrKey = document.getElementById("select-territorio").value;
+      const wrapOrg = document.getElementById("wrapper-organismo");
+      wrapOrg.classList.add("hidden");
 
-        function startCountdown() {
-            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
-            autoRefreshInterval = setInterval(() => {
-                if (document.getElementById('liveToggle').checked) {
-                    timerSeconds--;
-                    document.getElementById('countdownTimer').textContent = `${timerSeconds}s`;
-                    if (timerSeconds <= 0) {
-                        timerSeconds = 10;
-                        triggerLivePulseUpdate();
-                    }
-                }
-            }, 1000);
-        }
+      if (!terrKey) return;
+      wrapOrg.classList.remove("hidden");
+      fillOrganismos(territorialData.ccaa.territorios[terrKey].organismos);
+    }
 
-        function triggerLivePulseUpdate() {
-            const randomHash = '0x' + Array.from({length: 8}, () => Math.floor(Math.random()*16).toString(16)).join('');
-            document.getElementById('syncHash').textContent = `${randomHash}...`;
-            showToast('Actualización en vivo: Sincronización con el Registro Central de Personal', 'success');
-        }
+    function fillOrganismos(orgList) {
+      const selectOrg = document.getElementById("select-organismo");
+      selectOrg.innerHTML = '<option value="">-- Selecciona Organismo / Institución --</option>';
+      orgList.forEach(org => {
+        const opt = document.createElement("option");
+        opt.value = org.id;
+        opt.textContent = org.name;
+        selectOrg.appendChild(opt);
+      });
+    }
 
-        function forceSyncData() {
-            timerSeconds = 10;
-            document.getElementById('countdownTimer').textContent = '10s';
-            triggerLivePulseUpdate();
-        }
+    function onOrganismoChange() {
+      const nivel = document.getElementById("select-nivel").value;
+      const orgId = document.getElementById("select-organismo").value;
+      const wrapArea = document.getElementById("wrapper-area");
+      const selectArea = document.getElementById("select-area");
 
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `p-3 rounded-xl shadow-xl text-xs font-semibold text-white flex items-center space-x-2 bg-slate-800 border border-slate-700`;
-            toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i><span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
+      wrapArea.classList.add("hidden");
+      selectArea.innerHTML = '<option value="">-- Selecciona Área / Servicio --</option>';
 
-        function setupThemeToggle() {
-            document.getElementById('themeToggle').addEventListener('click', () => {
-                document.documentElement.classList.toggle('dark');
-            });
-        }
+      if (!orgId) return;
 
-        function setupLiveToggle() {
-            document.getElementById('liveToggle').addEventListener('change', (e) => {
-                showToast(e.target.checked ? 'Live Feed Activado' : 'Live Feed Pausado', 'info');
-            });
-        }
+      let orgFound = null;
+      if (nivel === "ccaa") {
+        const terrKey = document.getElementById("select-territorio").value;
+        orgFound = territorialData.ccaa.territorios[terrKey].organismos.find(o => o.id === orgId);
+      } else {
+        orgFound = territorialData[nivel].organismos.find(o => o.id === orgId);
+      }
 
-        function populateProvinces() {
-            const provinceSel = document.getElementById('provinceSelect');
-            provinceSel.innerHTML = '';
-            
-            if (selectedState.adminType === 'locales') {
-                Object.keys(spanishProvincesByCCAA).forEach(ccaaName => {
-                    const optgroup = document.createElement('optgroup');
-                    optgroup.label = `── ${ccaaName} ──`;
-                    spanishProvincesByCCAA[ccaaName].forEach(prov => {
-                        const opt = document.createElement('option');
-                        opt.value = prov.id;
-                        opt.textContent = prov.name;
-                        optgroup.appendChild(opt);
-                    });
-                    provinceSel.appendChild(optgroup);
-                });
-                selectedState.province = 'madrid';
-                provinceSel.value = 'madrid';
-            } else {
-                const typeData = masterDatabase[selectedState.adminType];
-                if (typeData && typeData.provinces) {
-                    Object.keys(typeData.provinces).forEach(pKey => {
-                        const opt = document.createElement('option');
-                        opt.value = pKey;
-                        opt.textContent = typeData.provinces[pKey].name;
-                        provinceSel.appendChild(opt);
-                    });
-                    selectedState.province = Object.keys(typeData.provinces)[0] || '';
-                }
-            }
-            populateEntities();
-        }
+      if (orgFound && orgFound.areas) {
+        wrapArea.classList.remove("hidden");
+        orgFound.areas.forEach(area => {
+          const opt = document.createElement("option");
+          opt.value = area;
+          opt.textContent = area;
+          selectArea.appendChild(opt);
+        });
+      }
+    }
 
-        function populateEntities() {
-            const entitySel = document.getElementById('entitySelect');
-            entitySel.innerHTML = '';
+    function updateDashboard() {
+      const area = document.getElementById("select-area").value;
+      if (!area) return;
 
-            let provinceData = masterDatabase[selectedState.adminType]?.provinces[selectedState.province];
+      let seed = 0;
+      for (let i = 0; i < area.length; i++) {
+        seed += area.charCodeAt(i);
+      }
 
-            if (!provinceData && selectedState.adminType === 'locales') {
-                const provName = findProvinceNameById(selectedState.province);
-                provinceData = {
-                    name: provName,
-                    entities: {
-                        [`ayto_${selectedState.province}`]: generateEntityData(`Ayuntamiento de ${provName}`),
-                        [`diputacion_${selectedState.province}`]: generateEntityData(`Diputación Provincial de ${provName}`)
-                    }
-                };
-            }
+      const presenciaVal = (82 + (seed % 15)).toFixed(1);
+      const ausentismoVal = (100 - presenciaVal).toFixed(1);
+      const alertasVal = 1 + (seed % 14);
 
-            if (provinceData && provinceData.entities) {
-                Object.keys(provinceData.entities).forEach(eKey => {
-                    const opt = document.createElement('option');
-                    opt.value = eKey;
-                    opt.textContent = provinceData.entities[eKey].name;
-                    entitySel.appendChild(opt);
-                });
-                selectedState.entity = Object.keys(provinceData.entities)[0] || '';
-            }
-            populateDepartments();
-        }
+      document.getElementById("stat-presencia").textContent = presenciaVal + "%";
+      document.getElementById("stat-ausentismo").textContent = ausentismoVal + "%";
+      document.getElementById("stat-alertas").textContent = alertasVal;
 
-        function populateDepartments() {
-            const deptSel = document.getElementById('departmentSelect');
-            deptSel.innerHTML = '<option value="all">🏢 Todos los Servicios y Áreas</option>';
-            const data = getSelectedEntityData();
-            if (data && data.depts) {
-                data.depts.forEach((d, index) => {
-                    const opt = document.createElement('option');
-                    opt.value = index;
-                    opt.textContent = d.name;
-                    deptSel.appendChild(opt);
-                });
-            }
-            updateDashboardView();
-        }
-
-        function findProvinceNameById(provId) {
-            for (const ccaa of Object.keys(spanishProvincesByCCAA)) {
-                const found = spanishProvincesByCCAA[ccaa].find(p => p.id === provId);
-                if (found) return found.name;
-            }
-            return "Provincia";
-        }
-
-        function getSelectedEntityData() {
-            let pObj = masterDatabase[selectedState.adminType]?.provinces[selectedState.province];
-            if (!pObj && selectedState.adminType === 'locales') {
-                const provName = findProvinceNameById(selectedState.province);
-                return generateEntityData(`Ayuntamiento de ${provName}`);
-            }
-            return pObj?.entities[selectedState.entity] || generateEntityData("Organismo Público");
-        }
-
-        // Lógica de actualización dinámica de datos y gráficos según selección (Punto 4 corregido)
-        function updateDashboardView() {
-            const data = getSelectedEntityData();
-            if (!data) return;
-
-            let activePct = data.activePct;
-            let activeCount = data.activeCount;
-            let unjustPct = data.unjustPct;
-            let unjustCount = data.unjustCount;
-            let deptsToShow = data.depts;
-
-            // Si se selecciona un departamento específico en el paso 4, se recalculan valores dinámicos únicos
-            if (selectedState.department !== 'all') {
-                const deptIndex = parseInt(selectedState.department);
-                const deptObj = data.depts[deptIndex];
-                if (deptObj) {
-                    deptsToShow = [deptObj];
-                    const calcPct = ((deptObj.active / deptObj.total) * 100).toFixed(1);
-                    activePct = `${calcPct}%`;
-                    activeCount = `(${deptObj.active}/${deptObj.total})`;
-                    const calcUnjust = (100 - calcPct > 15 ? 2.1 : 1.2).toFixed(1);
-                    unjustPct = `${calcUnjust}%`;
-                    unjustCount = `(${Math.round(deptObj.absent * 0.4)} casos)`;
-                }
-            }
-
-            document.getElementById('activeEntityBadge').textContent = `Seleccionado: ${data.name}`;
-            document.getElementById('kpiActivePercent').textContent = activePct;
-            document.getElementById('kpiActiveCount').textContent = activeCount;
-            document.getElementById('kpiUnjustifiedPercent').textContent = unjustPct;
-            document.getElementById('kpiUnjustifiedCount').textContent = unjustCount;
-            document.getElementById('kpiAvgDays').textContent = data.avgDays;
-            document.getElementById('kpiNatAvg').textContent = `${data.natAvg} días`;
-            document.getElementById('kpiDietCompliance').textContent = data.diet;
-            document.getElementById('kpiResolutionRate').textContent = data.resRate;
-
-            if (data.types) {
-                document.getElementById('typeCarrera').textContent = data.types.carrera;
-                document.getElementById('typeInterino').textContent = data.types.interino;
-                document.getElementById('typeLaboral').textContent = data.types.laboral;
-                document.getElementById('typeEventual').textContent = data.types.eventual;
-            }
-
-            renderHourlyChart(data.hourly);
-            renderCausesChart(data.causes);
-            renderHistoryChart(data.history);
-            renderSubUnitsTable(deptsToShow);
-        }
-
-        function renderSubUnitsTable(depts) {
-            const tbody = document.getElementById('subUnitsTable');
-            tbody.innerHTML = '';
-            if (!depts) return;
-
-            depts.forEach(d => {
-                const pct = ((d.active / d.total) * 100).toFixed(1);
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-700/50 transition';
-                tr.innerHTML = `
-                    <td class="py-3.5 px-6 font-semibold text-slate-900 dark:text-white">${d.name}</td>
-                    <td class="py-3.5 px-6">${d.total} emp.</td>
-                    <td class="py-3.5 px-6 text-emerald-600 font-bold">${d.active}</td>
-                    <td class="py-3.5 px-6 text-rose-500 font-bold">${d.absent}</td>
-                    <td class="py-3.5 px-6">
-                        <div class="flex items-center space-x-2">
-                            <span class="font-bold text-xs">${pct}%</span>
-                            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                                <div class="bg-emerald-500 h-full rounded-full" style="width: ${pct}%"></div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="py-3.5 px-6 text-center">
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300">
-                            Normal
-                        </span>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function onAdminTypeChange() {
-            selectedState.adminType = document.getElementById('adminTypeSelect').value;
-            populateProvinces();
-        }
-
-        function onProvinceChange() {
-            selectedState.province = document.getElementById('provinceSelect').value;
-            populateEntities();
-        }
-
-        function onEntityChange() {
-            selectedState.entity = document.getElementById('entitySelect').value;
-            populateDepartments();
-        }
-
-        function onDepartmentChange() {
-            selectedState.department = document.getElementById('departmentSelect').value;
-            updateDashboardView();
-        }
-
-        function setupListeners() {
-            document.getElementById('reportForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                document.getElementById('reportSuccess').classList.remove('hidden');
-                document.getElementById('reportCode').textContent = `#ES-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-                showToast('Denuncia cifrada registrada correctamente', 'success');
-            });
-        }
-
-        function quickSelect(type, prov, ent) {
-            selectedState.adminType = type;
-            document.getElementById('adminTypeSelect').value = type;
-            populateProvinces();
-            selectedState.province = prov;
-            document.getElementById('provinceSelect').value = prov;
-            populateEntities();
-            selectedState.entity = ent;
-            document.getElementById('entitySelect').value = ent;
-            selectedState.department = 'all';
-            document.getElementById('departmentSelect').value = 'all';
-            updateDashboardView();
-        }
-
-        function renderHourlyChart(data) {
-            const ctx = document.getElementById('hourlyChart').getContext('2d');
-            if (hourlyChart) hourlyChart.destroy();
-            hourlyChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'],
-                    datasets: [{ data: data, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.3 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100 } } }
-            });
-        }
-
-        function renderCausesChart(data) {
-            const ctx = document.getElementById('causesChart').getContext('2d');
-            if (causesChart) causesChart.destroy();
-            causesChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Baja Médica / Licencia', 'Permiso Normativo', 'Sin Justificar / Irregular', 'Teletrabajo Verificado'],
-                    datasets: [{ data: data, backgroundColor: ['#10b981', '#3b82f6', '#f43f5e', '#f59e0b'] }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
-            });
-        }
-
-        function renderHistoryChart(data) {
-            const ctx = document.getElementById('historyChart').getContext('2d');
-            if (historyChart) historyChart.destroy();
-            historyChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct'],
-                    datasets: [
-                        { label: 'Entidad Seleccionada', data: data, backgroundColor: '#059669', borderRadius: 4 },
-                        { label: 'Media Nacional Sector', data: Array(10).fill(10.8), type: 'line', borderColor: '#ef4444', borderDash: [5, 5], pointRadius: 0 }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
-            });
-        }
-
-        function exportDataCSV() {
-            const data = getSelectedEntityData();
-            let csvContent = "data:text/csv;charset=utf-8,Servicio,Plantilla,Presentes,Ausentes\n";
-            data.depts.forEach(d => {
-                csvContent += `"${d.name}",${d.total},${d.active},${d.absent}\n`;
-            });
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Transparencia_${data.name.replace(/ /g, "_")}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('Informe CSV descargado correctamente', 'success');
-        }
-    </script>
+      if (window.myChart) {
+        window.myChart.data.datasets[0].data = [presenciaVal, ausentismoVal];
+        window.myChart.update();
+      }
+    }
+  </script>
 </body>
 </html>
