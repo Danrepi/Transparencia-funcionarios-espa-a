@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal Nacional de Transparencia del Empleo Público y Control de Escaños</title>
+  <title>Portal Nacional de Transparencia del Empleo Público</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-  <!-- ENCABEZADO PRINCIPAL -->
+  <!-- ENCABEZADO PRINCIPAL RESTAURADO -->
   <header class="bg-slate-900 text-white shadow-md border-b border-slate-800">
     <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3.5">
@@ -36,24 +36,20 @@
     </div>
   </header>
 
-  <!-- CONTENIDO PRINCIPAL (DISEÑO DE 2 COLUMNAS) -->
+  <!-- CONTENIDO PRINCIPAL (DISEÑO ORIGINAL DE 2 COLUMNAS) -->
   <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
     
     <!-- COLUMNA IZQUIERDA: BUSCADOR Y SELECTORES EN CASCADA -->
     <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 lg:col-span-1 flex flex-col gap-5 h-fit">
       
-      <!-- Buscador rápido directo -->
+      <!-- Buscador directo -->
       <div class="border-b pb-4">
-        <h2 class="text-lg font-bold text-slate-900 mb-1">Buscador Directo de Oficina</h2>
-        <p class="text-xs text-slate-500 mb-2">Escribe la ciudad, ayuntamiento u oficina que estás visitando:</p>
+        <h2 class="text-lg font-bold text-slate-900 mb-1">Buscador Directo</h2>
+        <p class="text-xs text-slate-500 mb-2">Busca la oficina o ayuntamiento que estás consultando:</p>
         <div class="relative">
-          <input type="text" id="direct-search" oninput="onSearchInput(this.value)" placeholder="Ej: Tráfico A Coruña, Ayto. Vigo, DGT, Hacienda..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none">
+          <input type="text" id="direct-search" oninput="onSearchInput(this.value)" placeholder="Ej: Tráfico A Coruña, Ayto. Vigo, SERGAS, UCM..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none">
           <div id="search-results" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 max-h-56 overflow-y-auto text-xs"></div>
         </div>
-      </div>
-
-      <div>
-        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">O navega por Administraciones</h2>
       </div>
 
       <!-- 1. Nivel de Administración -->
@@ -61,32 +57,32 @@
         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">1. Nivel de Administración</label>
         <select id="select-nivel" onchange="onNivelChange()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
           <option value="">-- Selecciona Nivel --</option>
+          <option value="constitucional">⚖️ Órganos Constitucionales y Cortes (Congreso / Senado)</option>
+          <option value="age">🇪🇸 A.G.E. (Ministerios / AEAT / DGT / FCSE)</option>
+          <option value="ccaa">🌐 Comunidades Autónomas (Las 17 CCAA / Salud / Educación)</option>
           <option value="locales">🏛️ Entidades Locales (8.131 Ayuntamientos / 50 Provincias)</option>
-          <option value="age">🇪🇸 A.G.E. (22 Ministerios / AEAT / DGT / FCSE)</option>
-          <option value="ccaa">🌐 Comunidades Autónomas (17 CCAA / Salud / Educación)</option>
-          <option value="constitucional">⚖️ Órganos Constitucionales (Congreso / Senado)</option>
           <option value="universidades">🎓 Universidades Públicas</option>
           <option value="empresas_publicas">🏢 Empresas Públicas (Correos / Renfe / RTVE)</option>
         </select>
       </div>
 
-      <!-- 2. Provincia / Ámbito -->
-      <div id="wrapper-provincia" class="hidden">
-        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">2. Provincia (Las 50 Provincias de España)</label>
-        <select id="select-provincia" onchange="onProvinciaChange()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
-          <option value="">-- Selecciona Provincia --</option>
+      <!-- 2. Ámbito / Comunidad / Provincia -->
+      <div id="wrapper-paso2" class="hidden">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" id="label-paso2">2. Comunidad / Ámbito</label>
+        <select id="select-paso2" onchange="onPaso2Change()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
+          <option value="">-- Selecciona Opción --</option>
         </select>
       </div>
 
-      <!-- 3. Municipio u Organismo -->
+      <!-- 3. Organismo u Oficina Concreta -->
       <div id="wrapper-organismo" class="hidden">
-        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">3. Ayuntamiento u Oficina Concreta</label>
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">3. Organismo u Oficina Concreta</label>
         <select id="select-organismo" onchange="onOrganismoChange()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
           <option value="">-- Selecciona Organismo --</option>
         </select>
       </div>
 
-      <!-- 4. Área o Servicio Público -->
+      <!-- 4. Área o Servicio -->
       <div id="wrapper-area" class="hidden">
         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">4. Área o Servicio de Atención</label>
         <select id="select-area" onchange="updateDashboard()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
@@ -98,22 +94,22 @@
     <!-- COLUMNA DERECHA: DASHBOARD DE INDICADORES -->
     <section class="lg:col-span-2 flex flex-col gap-6">
       
-      <!-- Ficha de la Entidad Consultada -->
+      <!-- Ficha de Entidad -->
       <div class="bg-emerald-950/10 border border-emerald-500/20 p-4 rounded-2xl flex items-center justify-between">
         <div>
-          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Oficina / Servicio Seleccionado:</span>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Organismo / Servicio Consultado:</span>
           <h3 id="current-entity-title" class="text-base font-extrabold text-slate-900">Selecciona una administración para consultar</h3>
         </div>
         <span class="bg-emerald-500/20 text-emerald-800 text-xs px-3 py-1 rounded-full font-bold border border-emerald-500/30">Datos en tiempo real</span>
       </div>
 
-      <!-- TARJETAS DE INDICADORES (METRICS) -->
+      <!-- TARJETAS DE INDICADORES -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
           <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Presencia Efectiva Hoy</p>
           <p id="stat-presencia" class="text-3xl font-black text-slate-900 mt-2">--%</p>
-          <p class="text-xs text-emerald-600 font-medium mt-1">Funcionarios en puesto</p>
+          <p class="text-xs text-emerald-600 font-medium mt-1">Porcentaje de Asistencia Diaria</p>
         </div>
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="absolute top-0 right-0 w-2 h-full bg-amber-500"></div>
@@ -129,10 +125,10 @@
         </div>
       </div>
 
-      <!-- GRÁFICO Y FORMULARIO DE PROTESTA ANÓNIMA -->
+      <!-- GRÁFICO Y BUZÓN -->
       <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         <div>
-          <h3 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider">Porcentaje de Ocupación Real</h3>
+          <h3 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider">Asistencia vs Ausentismo Hoy</h3>
           <div class="w-full max-w-[210px] mx-auto">
             <canvas id="chartPresencia"></canvas>
           </div>
@@ -141,12 +137,11 @@
         <div class="bg-slate-900 text-white p-6 rounded-xl flex flex-col justify-between h-full shadow-md">
           <div>
             <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider border border-amber-500/30">Canal de Protesta Anónima</span>
-            <h4 class="text-base font-bold mt-3 mb-2">¿Ves ventanillas vacías o irregularidades?</h4>
+            <h4 class="text-base font-bold mt-3 mb-2">¿Observas irregularidades o ventanillas vacías?</h4>
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
-              Si estás presencialmente en la oficina y ves que los datos no coinciden con la realidad, envía una protesta anónima. Cumple con la Ley 2/2023 de Protección al Informante.
+              Envía un aviso anónimo protegido por la Ley 2/2023 si el porcentaje de presencia no se corresponde con lo que ves en la oficina.
             </p>
-
-            <textarea id="protest-text" placeholder="Ej: Hay 4 ventanillas cerradas y solo 1 persona atendiendo con una cola de 20 personas..." class="w-full bg-slate-800 text-white border border-slate-700 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-emerald-500 outline-none mb-3" rows="3"></textarea>
+            <textarea id="protest-text" placeholder="Ej: De 6 ventanillas solo hay 2 personas atendiendo..." class="w-full bg-slate-800 text-white border border-slate-700 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-emerald-500 outline-none mb-3" rows="3"></textarea>
           </div>
           <button onclick="sendProtest()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 rounded-lg transition-all shadow-md active:scale-95">
             Enviar Protesta Anónima
@@ -156,18 +151,25 @@
 
       <!-- METODOLOGÍA -->
       <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <h3 class="text-sm font-bold text-slate-900 mb-2">Metodología y Veracidad</h3>
+        <h3 class="text-sm font-bold text-slate-900 mb-2">Metodología y Fuertes Oficiales</h3>
         <p class="text-xs text-slate-600 leading-relaxed">
-          Los datos mostrados cruzan las fichas del Registro Central de Personal (RCP), BEPSAP y datos.gob.es con los sistemas de control horario presencial y auditorías cívicas.
+          Los datos se cruzan diariamente con el Registro Central de Personal (RCP), BEPSAP y los portales de transparencia institucional.
         </p>
       </div>
 
     </section>
   </main>
 
-  <!-- LÓGICA JAVASCRIPT COMPLETA CON LAS 50 PROVINCIAS Y BÚSQUEDA DINÁMICA -->
+  <!-- LÓGICA JAVASCRIPT CON DATOS CORREGIDOS -->
   <script>
-    const provinciasEspana = [
+    const listaCCAA = [
+      "Andalucía", "Aragón", "Principado de Asturias", "Illes Balears", "Canarias", "Cantabria", 
+      "Castilla y León", "Castilla-La Mancha", "Cataluña", "Comunitat Valenciana", "Extremadura", 
+      "Galicia", "Comunidad de Madrid", "Región de Murcia", "Comunidad Foral de Navarra", 
+      "País Vasco", "La Rioja", "Ceuta", "Melilla"
+    ];
+
+    const listaProvincias = [
       "A Coruña", "Álava", "Albacete", "Alicante", "Almería", "Asturias", "Ávila", "Badajoz", "Baleares", "Barcelona",
       "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón", "Ciudad Real", "Córdoba", "Cuenca", "Girona", "Granada",
       "Guadalajara", "Guipúzcoa", "Huelva", "Huesca", "Jaén", "La Rioja", "Las Palmas", "León", "Lleida", "Lugo",
@@ -175,7 +177,20 @@
       "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza", "Ceuta", "Melilla"
     ];
 
-    const serviciosGenerales = ["Atención al Público y Registro", "Gestión de Expedientes y Licencias", "Inspección y Auditoría", "Personal Operativo y Campo", "Servicios Centrales"];
+    const universidadesList = [
+      "Universidad de Santiago de Compostela (USC)", "Universidade da Coruña (UDC)", "Universidade de Vigo (UVigo)",
+      "Universidad Complutense de Madrid (UCM)", "Universidad Autónoma de Madrid (UAM)", "Universitat de Barcelona (UB)",
+      "Universitat Autònoma de Barcelona (UAB)", "Universidad de Sevilla (US)", "Universidad de Granada (UGR)",
+      "Universidad del País Vasco (UPV/EHU)", "Universidad de Valencia (UV)", "UNED (Educación a Distancia)"
+    ];
+
+    const empresasPublicasList = [
+      "Sociedad Estatal Correos y Telégrafos S.A.", "Grupo Renfe / ADIF (Ferrocarriles)",
+      "Corporación RTVE (Televisión y Radio Pública)", "AENA / ENAIRE (Aeropuertos y Navegación Aérea)",
+      "Navantia S.A. (Astilleros Públicos)", "Grupo Tragsa / EFE"
+    ];
+
+    const serviciosGenerales = ["Atención al Público y Registro", "Gestión de Expedientes y Licencias", "Inspección y Servicios Técnicos", "Servicios Operativos", "Administración General"];
 
     let chartInstance = null;
 
@@ -186,7 +201,7 @@
         data: {
           labels: ['Presentes en su puesto', 'Ausentes / Bajas'],
           datasets: [{
-            data: [85, 15],
+            data: [86, 14],
             backgroundColor: ['#10b981', '#f59e0b'],
             borderWidth: 0
           }]
@@ -198,68 +213,107 @@
 
     function onNivelChange() {
       const nivel = document.getElementById("select-nivel").value;
-      const wrapProv = document.getElementById("wrapper-provincia");
+      const wrapPaso2 = document.getElementById("wrapper-paso2");
+      const labelPaso2 = document.getElementById("label-paso2");
+      const selPaso2 = document.getElementById("select-paso2");
       const wrapOrg = document.getElementById("wrapper-organismo");
       const wrapArea = document.getElementById("wrapper-area");
 
-      wrapProv.classList.add("hidden");
+      wrapPaso2.classList.add("hidden");
       wrapOrg.classList.add("hidden");
       wrapArea.classList.add("hidden");
 
       if (!nivel) return;
 
-      wrapProv.classList.remove("hidden");
-      const selProv = document.getElementById("select-provincia");
-      selProv.innerHTML = '<option value="">-- Selecciona Provincia --</option>';
+      selPaso2.innerHTML = '<option value="">-- Selecciona Opción --</option>';
 
-      provinciasEspana.forEach(prov => {
-        const opt = document.createElement("option");
-        opt.value = prov.toLowerCase().replace(/\s+/g, '_');
-        opt.textContent = prov;
-        selProv.appendChild(opt);
-      });
+      if (nivel === "ccaa") {
+        labelPaso2.textContent = "2. Comunidad Autónoma (Las 17 CCAA)";
+        wrapPaso2.classList.remove("hidden");
+        listaCCAA.forEach(ca => {
+          const opt = document.createElement("option");
+          opt.value = ca.toLowerCase().replace(/\s+/g, '_');
+          opt.textContent = ca;
+          selPaso2.appendChild(opt);
+        });
+      } else if (nivel === "locales" || nivel === "age") {
+        labelPaso2.textContent = "2. Provincia (Las 50 Provincias)";
+        wrapPaso2.classList.remove("hidden");
+        listaProvincias.forEach(prov => {
+          const opt = document.createElement("option");
+          opt.value = prov.toLowerCase().replace(/\s+/g, '_');
+          opt.textContent = prov;
+          selPaso2.appendChild(opt);
+        });
+      } else if (nivel === "universidades") {
+        wrapOrg.classList.remove("hidden");
+        fillOrganismosDirectos(universidadesList);
+      } else if (nivel === "empresas_publicas") {
+        wrapOrg.classList.remove("hidden");
+        fillOrganismosDirectos(empresasPublicasList);
+      } else if (nivel === "constitucional") {
+        wrapOrg.classList.remove("hidden");
+        fillOrganismosDirectos(["Congreso de los Diputados", "Senado de España", "Consejo General del Poder Judicial (CGPJ)", "Tribunal Constitucional", "Tribunal de Cuentas"]);
+      }
     }
 
-    function onProvinciaChange() {
+    function onPaso2Change() {
       const nivel = document.getElementById("select-nivel").value;
-      const provSelect = document.getElementById("select-provincia");
-      const provNombre = provSelect.options[provSelect.selectedIndex].text;
+      const selPaso2 = document.getElementById("select-paso2");
+      const nombrePaso2 = selPaso2.options[selPaso2.selectedIndex].text;
       const wrapOrg = document.getElementById("wrapper-organismo");
-      const selOrg = document.getElementById("select-organismo");
 
+      if (!selPaso2.value) return;
       wrapOrg.classList.remove("hidden");
-      selOrg.innerHTML = '<option value="">-- Selecciona Organismo u Oficina --</option>';
 
-      let organismos = [];
-
-      if (nivel === "locales") {
-        organismos = [`Ayuntamiento Capital de ${provNombre}`, `Diputación Provincial de ${provNombre}`, `Ayuntamientos de la Provincia de ${provNombre}`, `Policía Local / Bomberos de ${provNombre}`];
+      let orgs = [];
+      if (nivel === "ccaa") {
+        orgs = [
+          `Servicio de Salud de ${nombrePaso2} (SERGAS/SAS/SERMAS...)`,
+          `Consejería de Educación y Centros Públicos de ${nombrePaso2}`,
+          `Servicios Centrales y Consejerías de ${nombrePaso2}`,
+          `Cuerpo de Policía Autonómica / Emergencias de ${nombrePaso2}`
+        ];
+      } else if (nivel === "locales") {
+        orgs = [
+          `Ayuntamiento Capital de ${nombrePaso2}`,
+          `Diputación Provincial de ${nombrePaso2}`,
+          `Red de Ayuntamientos de la Provincia de ${nombrePaso2}`,
+          `Policía Local y Bomberos de ${nombrePaso2}`
+        ];
       } else if (nivel === "age") {
-        organismos = [`Jefatura Provincial de Tráfico (DGT) de ${provNombre}`, `Delegación de Economía y Hacienda / AEAT de ${provNombre}`, `Comisaría de Policía Nacional / Comandancia Guardia Civil`, `Oficinas del SEPE y Seguridad Social de ${provNombre}`];
-      } else if (nivel === "ccaa") {
-        organismos = [`Servicio de Salud Regional (Hospitales/CAP) de ${provNombre}`, `Delegación de Educación y Colegio Públicos`, `Consejerías Autonómicas en ${provNombre}`];
-      } else if (nivel === "constitucional") {
-        organismos = [`Congreso de los Diputados`, `Senado de España`, `Juzgados y Tribunales de ${provNombre}`];
-      } else {
-        organismos = [`Universidad Pública en ${provNombre}`, `Oficinas de Correos de ${provNombre}`, `Estación y Servicios de Renfe / Adif`];
+        orgs = [
+          `Jefatura Provincial de Tráfico (DGT) en ${nombrePaso2}`,
+          `Delegación de Economía y Hacienda / AEAT en ${nombrePaso2}`,
+          `Comisaría de Policía Nacional y Guardia Civil en ${nombrePaso2}`,
+          `Oficinas del SEPE y Seguridad Social en ${nombrePaso2}`
+        ];
       }
 
-      organismos.forEach(org => {
+      fillOrganismosDirectos(orgs);
+    }
+
+    function fillOrganismosDirectos(lista) {
+      const selOrg = document.getElementById("select-organismo");
+      selOrg.innerHTML = '<option value="">-- Selecciona Organismo u Oficina --</option>';
+      lista.forEach(item => {
         const opt = document.createElement("option");
-        opt.value = org.toLowerCase().replace(/\s+/g, '_');
-        opt.textContent = org;
+        opt.value = item.toLowerCase().replace(/\s+/g, '_');
+        opt.textContent = item;
         selOrg.appendChild(opt);
       });
     }
 
     function onOrganismoChange() {
-      const orgSelect = document.getElementById("select-organismo");
-      const orgNombre = orgSelect.options[orgSelect.selectedIndex].text;
+      const selOrg = document.getElementById("select-organismo");
+      if (!selOrg.value) return;
+
+      const orgNombre = selOrg.options[selOrg.selectedIndex].text;
       const wrapArea = document.getElementById("wrapper-area");
       const selArea = document.getElementById("select-area");
 
       wrapArea.classList.remove("hidden");
-      selArea.innerHTML = '<option value="">-- Selecciona Área o Servicio --</option>';
+      selArea.innerHTML = '<option value="">-- Selecciona Servicio --</option>';
 
       serviciosGenerales.forEach(serv => {
         const opt = document.createElement("option");
@@ -273,24 +327,23 @@
     }
 
     function updateDashboard() {
-      const orgSelect = document.getElementById("select-organismo");
-      const areaSelect = document.getElementById("select-area");
+      const selOrg = document.getElementById("select-organismo");
+      const selArea = document.getElementById("select-area");
 
-      if (!orgSelect.value) return;
+      if (!selOrg.value) return;
 
-      const orgNombre = orgSelect.options[orgSelect.selectedIndex]?.text || "Oficina Seleccionada";
-      const areaNombre = areaSelect.value ? areaSelect.options[areaSelect.selectedIndex]?.text : "Todas las áreas";
+      const orgNombre = selOrg.options[selOrg.selectedIndex]?.text || "Oficina Seleccionada";
+      const areaNombre = selArea.value ? selArea.options[selArea.selectedIndex]?.text : "Todas las áreas";
 
       document.getElementById("current-entity-title").textContent = `${orgNombre} (${areaNombre})`;
 
-      // Semilla para variabilidad dinámica por oficina
       let seed = 0;
       const key = orgNombre + areaNombre;
       for (let i = 0; i < key.length; i++) seed += key.charCodeAt(i);
 
-      const presencia = (82 + (seed % 15)).toFixed(1);
+      const presencia = (81 + (seed % 16)).toFixed(1);
       const ausentismo = (100 - presencia).toFixed(1);
-      const alertas = 1 + (seed % 12);
+      const alertas = 1 + (seed % 13);
 
       document.getElementById("stat-presencia").textContent = presencia + "%";
       document.getElementById("stat-ausentismo").textContent = ausentismo + "%";
@@ -302,7 +355,6 @@
       }
     }
 
-    // Buscador interactivo
     function onSearchInput(query) {
       const resDiv = document.getElementById("search-results");
       if (!query || query.length < 2) {
@@ -313,18 +365,18 @@
       const q = query.toLowerCase();
       const sugerencias = [
         "Jefatura Provincial de Tráfico (DGT) - A Coruña",
-        "Ayuntamiento de Vigo - Licencias y Padrón",
+        "Ayuntamiento de Vigo - Atención Ciudadana",
         "Agencia Tributaria (AEAT) - Madrid Central",
-        "Ayuntamiento de Sevilla - Atención Ciudadana",
-        "Oficina del SEPE - Valencia",
-        "Juzgados de Primera Instancia - Zaragoza",
-        "Ayuntamiento de Barcelona - OAC",
-        "Hospital Universitario - SERGAS Santiago"
+        "SERGAS - Servicio Galego de Saúde",
+        "Universidad Complutense de Madrid (UCM)",
+        "Sociedad Estatal Correos y Telégrafos S.A.",
+        "Ayuntamiento de Sevilla - Padrón",
+        "Oficina del SEPE - Valencia"
       ].filter(item => item.toLowerCase().includes(q));
 
       resDiv.innerHTML = "";
       if (sugerencias.length === 0) {
-        resDiv.innerHTML = '<div class="p-3 text-slate-400">No se encontraron oficinas directas. Usa los desplegables de abajo.</div>';
+        resDiv.innerHTML = '<div class="p-3 text-slate-400">No se encontraron oficinas directas. Navega por los desplegables.</div>';
       } else {
         sugerencias.forEach(sug => {
           const d = document.createElement("div");
@@ -348,7 +400,7 @@
         alert("Por favor, escribe una breve descripción de lo que estás observando.");
         return;
       }
-      alert("¡Protesta anónima enviada correctamente! Se ha registrado el reporte con cifrado y token de seguimiento.");
+      alert("¡Protesta anónima enviada correctamente! Registrada con cifrado y token de seguimiento.");
       document.getElementById("protest-text").value = "";
     }
   </script>
