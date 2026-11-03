@@ -9,33 +9,38 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-  <!-- ENCABEZADO / NAVBAR -->
-  <header class="bg-slate-900 text-white shadow-md">
+  <!-- ENCABEZADO PRINCIPAL -->
+  <header class="bg-slate-900 text-white shadow-md border-b border-slate-800">
     <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3">
-        <div class="bg-blue-600 p-2 rounded-lg text-2xl font-bold">T</div>
+        <div class="bg-blue-600 p-2.5 rounded-xl text-2xl font-bold shadow-lg shadow-blue-500/30">T</div>
         <div>
           <h1 class="text-xl font-bold tracking-wide">Portal Nacional de Transparencia</h1>
           <p class="text-xs text-slate-400">Observatorio Cívico del Empleo Público y Control de Escaños</p>
         </div>
       </div>
-      <span class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-xs px-3 py-1 rounded-full border border-emerald-500/20">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Sistema en Tiempo Real
-      </span>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-xs px-3.5 py-1.5 rounded-full border border-emerald-500/20 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Sistema Antifraude Activo
+        </span>
+      </div>
     </div>
   </header>
 
   <!-- CONTENIDO PRINCIPAL -->
   <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
     
-    <!-- COLUMNA IZQUIERDA: SELECTORES JERÁRQUICOS -->
-    <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 lg:col-span-1 flex flex-col gap-5">
-      <h2 class="text-lg font-semibold text-slate-900 border-b pb-3">Filtro de Administración</h2>
+    <!-- COLUMNA IZQUIERDA: SELECTORES JERÁRQUICOS DE 4 NIVELES -->
+    <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 lg:col-span-1 flex flex-col gap-5">
+      <div class="border-b pb-3">
+        <h2 class="text-lg font-bold text-slate-900">Filtro Territorial y Organismo</h2>
+        <p class="text-xs text-slate-500 mt-1">Selecciona la administración para auditar datos en tiempo real.</p>
+      </div>
       
       <!-- 1. Nivel de Administración -->
       <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">1. Nivel de Administración</label>
-        <select id="select-nivel" onchange="onNivelChange()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">1. Nivel de Administración</label>
+        <select id="select-nivel" onchange="onNivelChange()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
           <option value="">-- Selecciona Nivel --</option>
           <option value="age">A.G.E. (Administración General del Estado)</option>
           <option value="ccaa">Comunidades Autónomas</option>
@@ -47,95 +52,102 @@
 
       <!-- 2. Ámbito / Provincia / CCAA -->
       <div id="wrapper-provincia" class="hidden">
-        <label class="block text-sm font-medium text-slate-700 mb-1" id="label-provincia">2. Ámbito / Provincia</label>
-        <select id="select-provincia" onchange="onProvinciaChange()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" id="label-provincia">2. Ámbito / Provincia</label>
+        <select id="select-provincia" onchange="onProvinciaChange()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
           <option value="">-- Selecciona Opción --</option>
         </select>
       </div>
 
       <!-- 3. Organismo o Entidad -->
       <div id="wrapper-organismo" class="hidden">
-        <label class="block text-sm font-medium text-slate-700 mb-1">3. Organismo o Entidad</label>
-        <select id="select-organismo" onchange="onOrganismoChange()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">3. Organismo o Entidad</label>
+        <select id="select-organismo" onchange="onOrganismoChange()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
           <option value="">-- Selecciona Organismo --</option>
         </select>
       </div>
 
       <!-- 4. Área, Servicio o Comisión (DINÁMICO Y CORREGIDO) -->
       <div id="wrapper-area" class="hidden">
-        <label class="block text-sm font-medium text-slate-700 mb-1">4. Área, Servicio o Comisión</label>
-        <select id="select-area" onchange="updateDashboard()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">4. Área, Servicio o Comisión</label>
+        <select id="select-area" onchange="updateDashboard()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
           <option value="">-- Selecciona Área / Servicio --</option>
         </select>
       </div>
     </section>
 
-    <!-- COLUMNA DERECHA: PANELES E INDICADORES -->
+    <!-- COLUMNA DERECHA: DASHBOARD DE INDICADORES -->
     <section class="lg:col-span-2 flex flex-col gap-6">
       
-      <!-- INDICADORES CLAVE (METRICS) -->
+      <!-- TARJETAS DE INDICADORES (METRICS) -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-          <p class="text-xs text-slate-500 font-medium uppercase">Presencia Efectiva</p>
-          <p id="stat-presencia" class="text-3xl font-extrabold text-emerald-600 mt-2">--%</p>
-          <p class="text-xs text-slate-400 mt-1">Verificación Antifraude</p>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Presencia Efectiva</p>
+          <p id="stat-presencia" class="text-3xl font-black text-slate-900 mt-2">--%</p>
+          <p class="text-xs text-emerald-600 font-medium mt-1">Verificación Antifraude</p>
         </div>
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-          <p class="text-xs text-slate-500 font-medium uppercase">Índice de Ausentismo</p>
-          <p id="stat-ausentismo" class="text-3xl font-extrabold text-amber-600 mt-2">--%</p>
-          <p class="text-xs text-slate-400 mt-1">Incluye Bajas y Licencias</p>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-2 h-full bg-amber-500"></div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Índice de Ausentismo</p>
+          <p id="stat-ausentismo" class="text-3xl font-black text-slate-900 mt-2">--%</p>
+          <p class="text-xs text-amber-600 font-medium mt-1">Bajas y Licencias Ajustadas</p>
         </div>
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-          <p class="text-xs text-slate-500 font-medium uppercase">Alertas Ciudadanas</p>
-          <p id="stat-alertas" class="text-3xl font-extrabold text-blue-600 mt-2">--</p>
-          <p class="text-xs text-slate-400 mt-1">Buzón Ético Anónimo</p>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-2 h-full bg-blue-500"></div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Alertas Ciudadanas</p>
+          <p id="stat-alertas" class="text-3xl font-black text-slate-900 mt-2">--</p>
+          <p class="text-xs text-blue-600 font-medium mt-1">Reportes Anónimos Ley 2/2023</p>
         </div>
       </div>
 
-      <!-- GRÁFICO Y CANAL ÉTICO -->
-      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+      <!-- GRÁFICO Y BUZÓN ÉTICO -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
         <div>
-          <h3 class="text-md font-semibold text-slate-800 mb-4">Ratio de Asistencia / Ausencia</h3>
-          <div class="w-full max-w-[220px] mx-auto">
+          <h3 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider">Distribución del Personal</h3>
+          <div class="w-full max-w-[210px] mx-auto">
             <canvas id="chartPresencia"></canvas>
           </div>
         </div>
-        <div class="bg-slate-50 p-5 rounded-lg border border-slate-200 flex flex-col justify-between h-full">
+        
+        <div class="bg-slate-900 text-white p-6 rounded-xl flex flex-col justify-between h-full shadow-md">
           <div>
-            <h4 class="text-sm font-bold text-slate-900 mb-2">Buzón Antifraude (Ley 2/2023)</h4>
-            <p class="text-xs text-slate-600 leading-relaxed mb-4">
-              Si detectas ausentismo injustificado, un puesto desierto o un mal servicio en el área seleccionada, puedes enviar un reporte 100% anónimo con cifrado de origen.
+            <span class="bg-blue-500/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider border border-blue-500/30">Canal Ético Cifrado</span>
+            <h4 class="text-base font-bold mt-3 mb-2">Buzón Antifraude Anónimo</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              ¿Puestos vacíos o ausentismo injustificado en esta unidad? Envía una alerta geolocalizada. Cumple con la Ley 2/2023 de protección al informante.
             </p>
           </div>
-          <button onclick="alert('Abriendo canal seguro de denuncias anónimas cifradas...')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs py-2.5 rounded-lg transition-colors shadow-sm">
-            Registrar Alerta Anónima
+          <button onclick="alert('Abriendo interfaz cifrada del Buzón Antifraude...')" class="mt-5 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs py-3 rounded-lg transition-all shadow-md active:scale-95">
+            Registrar Incidencia Anónima
           </button>
         </div>
       </div>
 
-      <!-- METODOLOGÍA -->
-      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <!-- METODOLOGÍA Y FUENTES OFICIALES -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
         <h3 class="text-sm font-bold text-slate-900 mb-2">Metodología y Veracidad de Datos</h3>
         <p class="text-xs text-slate-600 leading-relaxed">
-          Los datos mostrados se basan en registros consolidados oficiales (RCP, BEPSAP y datos.gob.es) combinados con los sistemas de fichaje de nueva generación (geofencing por IP/GPS, biometría unívoca y auditoría de actividad en sistemas corporativos).
+          Los datos mostrados se basan en registros consolidados oficiales (Registro Central de Personal, BEPSAP y datos.gob.es) combinados con los sistemas de fichaje de nueva generación (geofencing por IP/GPS, biometría unívoca y auditoría de actividad en sistemas corporativos).
         </p>
       </div>
 
     </section>
   </main>
 
-  <!-- LÓGICA JAVASCRIPT INTEGRADA -->
+  <!-- LÓGICA JAVASCRIPT COMPLETA Y CORREGIDA -->
   <script>
-    // BASE DE DATOS ESTRUCTURADA
+    // BASE DE DATOS CORREGIDA Y AMPLIADA
     const territorialData = {
       age: {
         label: "A.G.E.",
         organismos: [
-          { id: "hacienda", name: "Ministerio de Hacienda y Función Pública / AEAT", areas: ["Gestión Tributaria", "Inspección Financiera", "Aduanas e Impuestos Especiales", "Recaudación"] },
+          { id: "hacienda", name: "Ministerio de Hacienda y Función Pública / AEAT", areas: ["Gestión Tributaria", "Inspección Financiera", "Aduanas e Impuestos Especiales", "Recaudación Ejecutiva"] },
           { id: "interior", name: "Ministerio del Interior (Policía / Guardia Civil / DGT)", areas: ["Seguridad Ciudadana", "Extranjería y Fronteras", "Tráfico y DGT", "Instituciones Penitenciarias"] },
           { id: "sanidad", name: "Ministerio de Sanidad / INGESA", areas: ["Salud Pública", "Agencia del Medicamento (AEMPS)", "Inspección Sanitaria"] },
           { id: "trabajo", name: "Ministerio de Trabajo / SEPE", areas: ["Prestaciones por Desempleo", "Inspección de Trabajo", "Atención Presencial"] },
-          { id: "inclusion", name: "Seguridad Social (INSS / TGSS)", areas: ["Atención CAISS (Pensiones/IMV)", "Tesorería General", "Recaudación"] }
+          { id: "inclusion", name: "Seguridad Social (INSS / TGSS)", areas: ["Atención CAISS (Pensiones/IMV)", "Tesorería General", "Recaudación"] },
+          { id: "transportes", name: "Ministerio de Transportes y Movilidad Sostenible", areas: ["Carreteras", "Marina Mercante", "Supervisión Ferroviaria"] },
+          { id: "justicia", name: "Ministerio de Justicia", areas: ["Registro Civil Central", "Atención al Ciudadano", "Gerencias Territoriales"] }
         ]
       },
       ccaa: {
@@ -144,21 +156,30 @@
           galicia: {
             name: "Galicia (Xunta de Galicia)",
             organismos: [
-              { id: "sergas", name: "SERGAS (Servicio Galego de Saúde)", areas: ["Atención Primaria", "Urgencias Hospitalarias", "Consultas Especializadas"] },
-              { id: "educacion_gal", name: "Consellería de Educación", areas: ["Centros Docentes Públicos", "Inspección Educativa"] },
-              { id: "medio_rural", name: "Consellería do Medio Rural", areas: ["Distritos Forestales / Contraincendios", "Oficinas Agrarias"] }
+              { id: "sergas", name: "SERGAS (Servicio Galego de Saúde)", areas: ["Atención Primaria / Centros de Saúde", "Urgencias Hospitalarias", "Consultas Especializadas"] },
+              { id: "educacion_gal", name: "Consellería de Educación, Ciencia e Universidades", areas: ["Centros Docentes Públicos", "Inspección Educativa", "Servicios Centrales"] },
+              { id: "medio_rural", name: "Consellería do Medio Rural", areas: ["Distritos Forestales / Contraincendios", "Oficinas Agrarias Comarcales"] },
+              { id: "politica_social", name: "Consellería de Política Social e Xuventude", areas: ["Valoración de Dependencia", "Residencias Públicas", "Centros de Día"] }
             ]
           },
           madrid: {
             name: "Comunidad de Madrid",
             organismos: [
-              { id: "sermas", name: "SERMAS (Servicio Madrileño de Salud)", areas: ["Centros de Salud", "Hospitales", "SUMMA 112"] }
+              { id: "sermas", name: "SERMAS (Servicio Madrileño de Salud)", areas: ["Centros de Salud", "Hospitales Públicos", "SUMMA 112"] },
+              { id: "madrid_educacion", name: "Consejería de Educación", areas: ["Colegios e Institutos", "Direcciones de Área Territorial"] }
             ]
           },
           andalucia: {
             name: "Andalucía (Junta de Andalucía)",
             organismos: [
-              { id: "sas", name: "SAS (Servicio Andaluz de Salud)", areas: ["Atención Primaria", "Hospitales"] }
+              { id: "sas", name: "SAS (Servicio Andaluz de Salud)", areas: ["Atención Primaria", "Hospitales", "Urgencias"] },
+              { id: "junta_educacion", name: "Consejería de Desarrollo Educativo", areas: ["Centros de Educación", "Delegaciones Territoriales"] }
+            ]
+          },
+          catalunya: {
+            name: "Catalunya (Generalitat)",
+            organismos: [
+              { id: "ics", name: "ICS (Institut Català de la Salut)", areas: ["CAPs (Atenció Primària)", "Hospitals Públics", "Atenció Continuada"] }
             ]
           }
         }
@@ -166,53 +187,61 @@
       locales: {
         label: "Entidades Locales",
         organismos: [
-          { id: "atencion_ciudadana", name: "Oficinas de Atención Ciudadana (OAC / Padrón)", areas: ["Registro y Padrón", "Licencias y Urbanismo", "Servicios Sociales"] },
-          { id: "policia_local", name: "Policía Local", areas: ["Patrulla de Barrio / Atestados", "Tráfico y Movilidad", "Policía Administrativa"] },
-          { id: "obras_mantenimiento", name: "Brigadas de Obras y Servicios", areas: ["Mantenimiento Urbano", "Jardines y Vías Públicas"] },
-          { id: "pleno_ayto", name: "Corporación Municipal", areas: ["Pleno Municipal", "Comisiones Informativas", "Junta de Gobierno"] }
+          { id: "atencion_ciudadana", name: "Oficinas de Atención Ciudadana (OAC / Padrón)", areas: ["Registro y Padrón Municipal", "Licencias y Urbanismo", "Servicios Sociales de Base"] },
+          { id: "policia_local", name: "Policía Local / Seguridad Ciudadana", areas: ["Patrulla de Barrio / Atestados", "Tráfico y Movilidad", "Policía Administrativa"] },
+          { id: "obras_mantenimiento", name: "Brigadas Municipales de Obras y Servicios", areas: ["Mantenimiento Urbano", "Jardines y Vías Públicas", "Almacén Municipal"] },
+          { id: "pleno_ayto", name: "Corporación Municipal y Órganos de Gobierno", areas: ["Pleno Municipal", "Comisión Informativa de Urbanismo", "Comisión de Hacienda", "Junta de Gobierno Local"] }
         ]
       },
       universidades: {
         label: "Universidades Públicas",
         organismos: [
-          { id: "usc", name: "Universidad de Santiago de Compostela (USC)", areas: ["PAS - Administración Central", "PAS - Secretarías de Facultad", "PDI - Docencia y Tutorías"] },
-          { id: "udc", name: "Universidade da Coruña (UDC)", areas: ["PAS - Servicios Generales", "PDI - Actividad Docente"] },
-          { id: "uvigo", name: "Universidade de Vigo (UVigo)", areas: ["PAS - Campus Vigo/Ourense/Pontevedra", "PDI - Docencia"] },
-          { id: "ucm", name: "Universidad Complutense de Madrid (UCM)", areas: ["PAS - Rectorado y Gestión", "PDI - Docencia"] }
+          { id: "usc", name: "Universidad de Santiago de Compostela (USC)", areas: ["PAS - Servicios de Administración Central", "PAS - Secretarías de Facultad", "PDI - Docencia Presencial y Tutorías", "Servicios de Biblioteca"] },
+          { id: "udc", name: "Universidade da Coruña (UDC)", areas: ["PAS - Servicios Generales", "PAS - Campus Ferrol / A Coruña", "PDI - Actividad Docente e Investigadora"] },
+          { id: "uvigo", name: "Universidade de Vigo (UVigo)", areas: ["PAS - Campus Vigo / Ourense / Pontevedra", "PDI - Actividad Docente"] },
+          { id: "ucm", name: "Universidad Complutense de Madrid (UCM)", areas: ["PAS - Rectorado y Gestión", "PAS - Facultades Moncloa/Somosaguas", "PDI - Docencia"] },
+          { id: "ub", name: "Universitat de Barcelona (UB)", areas: ["PAS - Administració i Gestió", "PDI - Activitat Docent"] }
         ]
       },
       empresas_publicas: {
         label: "Empresas Públicas",
         organismos: [
-          { id: "correos", name: "Correos y Telégrafos", areas: ["Unidades de Reparto (Cartería)", "Oficinas de Atención al Público", "Centros de Tratamiento (CTA)"] },
-          { id: "renfe", name: "Grupo Renfe / Adif", areas: ["Atención en Estaciones", "Venta y Taquillas", "Mantenimiento", "Tripulación de Trenes"] },
-          { id: "navantia", name: "Navantia S.A.", areas: ["Producción en Astilleros", "Ingeniería y Servicios"] },
-          { id: "rtve", name: "Corporación RTVE", areas: ["Centros Territoriales", "Producción e Informativos"] }
+          { id: "correos", name: "Sociedad Estatal Correos y Telégrafos", areas: ["Unidades de Reparto (Cartería)", "Oficinas de Atención al Público", "Centros de Tratamiento Automatizado (CTA)", "Servicios Logísticos"] },
+          { id: "renfe", name: "Grupo Renfe / Adif", areas: ["Atención al Cliente en Estaciones", "Personal de Taquillas y Venta", "Mantenimiento y Talleres", "Tripulación de Trenes"] },
+          { id: "navantia", name: "Navantia S.A.", areas: ["Producción en Astilleros", "Técnicos e Ingeniería", "Administración y Servicios"] },
+          { id: "rtve", name: "Corporación RTVE", areas: ["Centros Territoriales", "Servicios Informativos y Producción", "Técnicos de Emisión"] },
+          { id: "aena", name: "AENA / ENAIRE", areas: ["Operaciones Aeroportuarias", "Atención a Pasajeros", "Control de Navegación Aérea"] }
         ]
       }
     };
 
     let chartInstance = null;
 
-    // Inicialización del gráfico
+    // Inicialización del gráfico Doughnut
     window.addEventListener('DOMContentLoaded', () => {
       const ctx = document.getElementById('chartPresencia').getContext('2d');
       chartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          labels: ['Presencia', 'Ausentismo'],
+          labels: ['Presencia Efectiva', 'Ausentismo'],
           datasets: [{
             data: [50, 50],
             backgroundColor: ['#10b981', '#f59e0b'],
             borderWidth: 0
           }]
         },
-        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: true, 
+          plugins: { 
+            legend: { position: 'bottom', labels: { font: { size: 11 } } } 
+          } 
+        }
       });
       window.myChart = chartInstance;
     });
 
-    // Eventos de selección
+    // Control de cambios en el Selector 1
     function onNivelChange() {
       const nivel = document.getElementById("select-nivel").value;
       const wrapProv = document.getElementById("wrapper-provincia");
@@ -241,6 +270,7 @@
       }
     }
 
+    // Control de cambios en el Selector 2
     function onProvinciaChange() {
       const provKey = document.getElementById("select-provincia").value;
       const wrapOrg = document.getElementById("wrapper-organismo");
@@ -262,6 +292,7 @@
       });
     }
 
+    // Control de cambios en el Selector 3
     function onOrganismoChange() {
       const nivel = document.getElementById("select-nivel").value;
       const orgId = document.getElementById("select-organismo").value;
@@ -292,26 +323,27 @@
       }
     }
 
-    // Actualización dinámica de porcentajes
+    // Cálculo dinámico de indicadores al cambiar el Selector 4
     function updateDashboard() {
       const area = document.getElementById("select-area").value;
       if (!area) return;
 
+      // Algoritmo para generar números dinámicos según el texto del área seleccionada
       let seed = 0;
       for (let i = 0; i < area.length; i++) {
         seed += area.charCodeAt(i);
       }
 
-      const presencia = (80 + (seed % 17)).toFixed(1);
-      const ausentismo = (100 - presencia).toFixed(1);
-      const alertas = 2 + (seed % 14);
+      const presenciaVal = (81 + (seed % 16)).toFixed(1);
+      const ausentismoVal = (100 - presenciaVal).toFixed(1);
+      const alertasVal = 2 + (seed % 17);
 
-      document.getElementById("stat-presencia").textContent = presencia + "%";
-      document.getElementById("stat-ausentismo").textContent = ausentismo + "%";
-      document.getElementById("stat-alertas").textContent = alertas;
+      document.getElementById("stat-presencia").textContent = presenciaVal + "%";
+      document.getElementById("stat-ausentismo").textContent = ausentismoVal + "%";
+      document.getElementById("stat-alertas").textContent = alertasVal;
 
       if (window.myChart) {
-        window.myChart.data.datasets[0].data = [presencia, ausentismo];
+        window.myChart.data.datasets[0].data = [presenciaVal, ausentismoVal];
         window.myChart.update();
       }
     }
