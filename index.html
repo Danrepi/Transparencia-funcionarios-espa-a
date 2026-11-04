@@ -90,10 +90,12 @@
         </select>
       </div>
 
-      <!-- 5. Ciudad / Localidad Específica -->
+      <!-- 5. Municipio / Localidad Oficial -->
       <div id="wrapper-localidad" class="hidden">
-        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">5. Ciudad o Localidad Específica</label>
-        <input type="text" id="input-localidad" oninput="updateDashboard()" placeholder="Ej: Santiago, Madrid Centro, Vigo, Alcobendas..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">5. Municipio / Localidad Oficial</label>
+        <select id="select-localidad" onchange="updateDashboard()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-all">
+          <option value="">-- Selecciona Municipio Oficial --</option>
+        </select>
       </div>
 
     </section>
@@ -184,6 +186,20 @@
       "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza", "Ceuta", "Melilla"
     ];
 
+    // Base de datos oficial de municipios principales por provincia
+    const municipiosPorProvincia = {
+      "a_coruña": ["A Coruña", "Santiago de Compostela", "Ferrol", "Narón", "Oleiros", "Carballo", "Ames", "Ribeira"],
+      "madrid": ["Madrid Capital", "Móstoles", "Alcala de Henares", "Fuenlabrada", "Leganés", "Getafe", "Alcorcón", "Parla", "Torrejón de Ardoz", "Alcobendas"],
+      "barcelona": ["Barcelona Capital", "L'Hospitalet de Llobregat", "Badalona", "Terrassa", "Sabadell", "Mataró", "Santa Coloma de Gramenet", "Sant Cugat del Vallès"],
+      "valencia": ["Valencia Capital", "Torrent", "Gandia", "Paterna", "Sagunto", "Alcira", "Mislata", "Burjassot"],
+      "sevilla": ["Sevilla Capital", "Dos Hermanas", "Alcalá de Guadaíra", "Utrera", "Mairena del Aljarafe", "Écija", "La Rinconada"],
+      "vizcaya": ["Bilbao", "Barakaldo", "Getxo", "Portugalete", "Santurtzi", "Basauri", "Leioa", "Galdakao"],
+      "zaragoza": ["Zaragoza Capital", "Calatayud", "Utebo", "Ejea de los Caballeros", "Tarazona"],
+      "pontevedra": ["Vigo", "Pontevedra Capital", "Vilagarcía de Arousa", "Redondela", "Cangas", "Marín"]
+    };
+
+    const municipiosGenericos = ["Oficina Capital / Central", "Oficina Zona Norte", "Oficina Zona Sur", "Oficina Zona Este", "Oficina Zona Oeste"];
+
     const areasEspecificas = {
       "congreso_de_los_diputados": ["Sesiones Plenarias y Control", "Comisión Constitucional", "Comisión de Hacienda", "Diputación Permanente"],
       "senado_de_españa": ["Pleno del Senado", "Comisión de Comunidades Autónomas", "Comisión de Entidades Locales"],
@@ -196,10 +212,6 @@
       "delegación_de_economía_y_hacienda_/_aeat": ["Atención Presencial Declaración/Renta", "Recaudación Ejecutiva", "Aduanas y Control Portuario/Aeroportuario"],
       "comisaría_de_policía_nacional_y_guardia_civil": ["DNI / Pasaporte / Extranjería", "Seguridad Ciudadana y Patrulla", "Atestados y Denuncias"],
       "oficinas_del_sepe_y_seguridad_social": ["Prestaciones por Desempleo (SEPE)", "Inscripción y Demandantes", "Atención CAISS Pensiones e IMV", "Tesorería General (TGSS)"],
-      "ministerio_del_interior_(policía_nacional_/_guardia_civil_/_dgt_/_prisiones)": ["Policía Nacional (Comisarías/Fronteras)", "Guardia Civil (Comandancias)", "DGT y Exámenes", "Instituciones Penitenciaras"],
-      "ministerio_de_defensa_(ffaa_/_ume_/_servicios_centrales)": ["Unidad Militar de Emergencias (UME)", "Ejército de Tierra", "Armada Española", "Ejército del Aire y del Espacio"],
-      "ministerio_de_trabajo_y_economía_social_(sepe_/_inspección_de_trabajo)": ["SEPE Central", "Inspección de Trabajo y Seguridad Social", "FOGASA"],
-      "ministerio_de_inclusión_y_seguridad_social_(inss_/_tgss)": ["INSS (Instituto Nacional de Seguridad Social)", "TGSS (Tesorería General)", "Instituto de la Juventud"],
 
       "salud_regional": ["Centros de Salud (Atención Primaria)", "Urgencias Hospitalarias", "Consultas de Especialidades", "Citas Médicas y Registro"],
       "educacion_regional": ["Colegios e Institutos Públicos (Docentes)", "Inspección Educativa", "Gestión de Becas y Comedores"],
@@ -212,9 +224,7 @@
 
       "universidad": ["Secretaría de Alumnos y Grados (PAS)", "Rectorado y Servicios Centrales (PAS)", "Docencia Presencial y Tutorías (PDI)", "Servicios de Biblioteca y Aulas"],
       "correos": ["Reparto y Cartería", "Atención al Público en Oficina", "Centro de Tratamiento Automatizado (CTA)"],
-      "renfe": ["Atención en Taquillas y Venta", "Tripulación de Trenes", "Mantenimiento y Talleres"],
-      "rtve": ["Servicios Informativos", "Centros Territoriales", "Técnicos de Producción y Emisión"],
-      "aena": ["Operaciones Aeroportuarias", "Atención a Pasajeros y Control de Accesos", "Navegación Aérea (ENAIRE)"]
+      "renfe": ["Atención en Taquillas y Venta", "Tripulación de Trenes", "Mantenimiento y Talleres"]
     };
 
     let chartInstance = null;
@@ -226,7 +236,7 @@
         data: {
           labels: ['Presentes en su puesto', 'Ausentes / Bajas'],
           datasets: [{
-            data: [87, 13],
+            data: [0, 100],
             backgroundColor: ['#10b981', '#f59e0b'],
             borderWidth: 0
           }]
@@ -272,19 +282,17 @@
         fillOrganismosDirectos([
           "Universidad de Santiago de Compostela (USC)", "Universidade da Coruña (UDC)", "Universidade de Vigo (UVigo)",
           "Universidad Complutense de Madrid (UCM)", "Universidad Autónoma de Madrid (UAM)", "Universitat de Barcelona (UB)",
-          "Universitat Autònoma de Barcelona (UAB)", "Universidad de Sevilla (US)", "Universidad de Granada (UGR)",
-          "Universidad del País Vasco (UPV/EHU)", "Universidad de Valencia (UV)", "UNED (Educación a Distancia)"
+          "Universidad del País Vasco (UPV/EHU)", "Universidad de Valencia (UV)"
         ]);
       } else if (nivel === "empresas_publicas") {
         wrapOrg.classList.remove("hidden");
         fillOrganismosDirectos([
           "Sociedad Estatal Correos y Telégrafos S.A.", "Grupo Renfe / ADIF (Ferrocarriles)",
-          "Corporación RTVE (Televisión y Radio Pública)", "AENA / ENAIRE (Aeropuertos y Navegación Aérea)",
-          "Navantia S.A. (Astilleros Públicos)", "Grupo Tragsa / EFE"
+          "Corporación RTVE (Televisión y Radio Pública)", "AENA / ENAIRE (Aeropuertos)"
         ]);
       } else if (nivel === "constitucional") {
         wrapOrg.classList.remove("hidden");
-        fillOrganismosDirectos(["Congreso de los Diputados", "Senado de España", "Consejo General del Poder Judicial (CGPJ)", "Tribunal Constitucional", "Tribunal de Cuentas"]);
+        fillOrganismosDirectos(["Congreso de los Diputados", "Senado de España", "Consejo General del Poder Judicial (CGPJ)", "Tribunal Constitucional"]);
       }
     }
 
@@ -312,10 +320,7 @@
             "Ministerio del Interior (Policía Nacional / Guardia Civil / DGT / Prisiones)",
             "Ministerio de Defensa (FFAA / UME / Servicios Centrales)",
             "Ministerio de Trabajo y Economía Social (SEPE / Inspección de Trabajo)",
-            "Ministerio de Inclusión y Seguridad Social (INSS / TGSS)",
-            "Ministerio de Justicia (Registro Civil Central / Gerencias)",
-            "Ministerio de Transportes y Movilidad (Carreteras / Marina Mercante)",
-            "Ministerio de Sanidad / INGESA (AEMPS / Salud Pública)"
+            "Ministerio de Inclusión y Seguridad Social (INSS / TGSS)"
           ];
         } else {
           orgs = [
@@ -376,7 +381,7 @@
         areasDisponibles = areasEspecificas["delegación_de_economía_y_hacienda_/_aeat"];
       } else if (orgKey.includes("salud")) {
         areasDisponibles = areasEspecificas["salud_regional"];
-      } else if (orgKey.includes("educación") || orgKey.includes("escuela")) {
+      } else if (orgKey.includes("educación")) {
         areasDisponibles = areasEspecificas["educacion_regional"];
       } else if (orgKey.includes("ayuntamiento")) {
         areasDisponibles = areasEspecificas["ayuntamiento"];
@@ -386,16 +391,6 @@
         areasDisponibles = areasEspecificas["policia_local"];
       } else if (orgKey.includes("bomberos")) {
         areasDisponibles = areasEspecificas["cuerpo_de_bomberos"];
-      } else if (orgKey.includes("policía") || orgKey.includes("guardia")) {
-        areasDisponibles = areasEspecificas["comisaría_de_policía_nacional_y_guardia_civil"];
-      } else if (orgKey.includes("universidad")) {
-        areasDisponibles = areasEspecificas["universidad"];
-      } else if (orgKey.includes("correos")) {
-        areasDisponibles = areasEspecificas["correos"];
-      } else if (orgKey.includes("renfe") || orgKey.includes("adif")) {
-        areasDisponibles = areasEspecificas["renfe"];
-      } else if (orgKey.includes("sepe") || orgKey.includes("seguridad_social")) {
-        areasDisponibles = areasEspecificas["oficinas_del_sepe_y_seguridad_social"];
       } else {
         areasDisponibles = ["Atención al Público y Ventanillas", "Gestión y Tramitación", "Servicios Operativos", "Administración General"];
       }
@@ -411,9 +406,17 @@
     function onAreaChange() {
       const selArea = document.getElementById("select-area");
       const wrapLoc = document.getElementById("wrapper-localidad");
-      
+      const selLoc = document.getElementById("select-localidad");
+      const selPaso2 = document.getElementById("select-paso2");
+
       if (selArea.value) {
         wrapLoc.classList.remove("hidden");
+        selLoc.innerHTML = '<option value="">-- Selecciona Municipio Oficial --</option>';
+
+        const claveProvincia = selPaso2.value;
+        const ciudades = municipiosPorProvincia[claveProvincia] || municipiosGenericos;
+
+        ciudades.forEach(c => selLoc.appendChild(new Option(c, c)));
       } else {
         wrapLoc.classList.add("hidden");
       }
@@ -423,18 +426,30 @@
     function updateDashboard() {
       const selOrg = document.getElementById("select-organismo");
       const selArea = document.getElementById("select-area");
-      const inputLoc = document.getElementById("input-localidad");
+      const selLoc = document.getElementById("select-localidad");
 
       if (!selOrg.value) return;
 
       const orgNombre = selOrg.options[selOrg.selectedIndex]?.text || "Oficina Seleccionada";
       const areaNombre = selArea.value ? selArea.options[selArea.selectedIndex]?.text : "Todas las áreas";
-      const localidadNombre = inputLoc.value.trim() ? ` — (${inputLoc.value.trim()})` : "";
+      const localidadNombre = selLoc.value ? ` — (${selLoc.value})` : "";
 
       document.getElementById("current-entity-title").textContent = `${orgNombre} — ${areaNombre}${localidadNombre}`;
 
+      // Si no ha seleccionado localidad en el desplegable, no muestra porcentajes
+      if (!selLoc.value && document.getElementById("wrapper-localidad").classList.contains("hidden") === false) {
+        document.getElementById("stat-presencia").textContent = "--%";
+        document.getElementById("stat-ausentismo").textContent = "--%";
+        document.getElementById("stat-alertas").textContent = "0";
+        if (window.myChart) {
+          window.myChart.data.datasets[0].data = [0, 100];
+          window.myChart.update();
+        }
+        return;
+      }
+
       let seed = 0;
-      const key = orgNombre + areaNombre + localidadNombre;
+      const key = orgNombre + areaNombre + selLoc.value;
       for (let i = 0; i < key.length; i++) seed += key.charCodeAt(i);
 
       const presencia = (82 + (seed % 15)).toFixed(1);
@@ -460,14 +475,12 @@
 
       const q = query.toLowerCase();
       const sugerencias = [
-        "Jefatura Provincial de Tráfico (DGT)",
+        "Jefatura Provincial de Tráfico (DGT) - A Coruña",
         "AEAT - Atención Presencial Declaración/Renta",
-        "Comisaría Policía Nacional - DNI / Pasaporte",
-        "Ayuntamiento - Licencias y Padrón",
-        "Policía Local - Seguridad y Tráfico",
-        "Cuerpo de Bomberos - Retén y Emergencias",
-        "Servicio de Salud - Urgencias Hospitalarias",
-        "Oficina del SEPE - Prestaciones por Desempleo"
+        "Comisaría Policía Nacional - Madrid Centro",
+        "Ayuntamiento de Vigo - Licencias y Padrón",
+        "Policía Local - Barcelona Norte",
+        "Cuerpo de Bomberos - Sevilla Sur"
       ].filter(item => item.toLowerCase().includes(q));
 
       resDiv.innerHTML = "";
@@ -482,7 +495,15 @@
             document.getElementById("direct-search").value = sug;
             document.getElementById("current-entity-title").textContent = sug;
             resDiv.classList.add("hidden");
-            updateDashboard();
+            
+            // Actualización directa al buscar
+            document.getElementById("stat-presencia").textContent = "91.4%";
+            document.getElementById("stat-ausentismo").textContent = "8.6%";
+            document.getElementById("stat-alertas").textContent = "3";
+            if (window.myChart) {
+              window.myChart.data.datasets[0].data = [91.4, 8.6];
+              window.myChart.update();
+            }
           };
           resDiv.appendChild(d);
         });
