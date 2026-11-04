@@ -3,34 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal Nacional de Transparencia del Empleo Público</title>
+  <title>Portal Nacional de Transparencia y Auditoría Cívica del Empleo Público</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-  <!-- ENCABEZADO PRINCIPAL RESTAURADO -->
+  <!-- ENCABEZADO PRINCIPAL CON EL NUEVO PROPÓSITO -->
   <header class="bg-slate-900 text-white shadow-md border-b border-slate-800">
     <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3.5">
         <div class="bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-500/20 text-emerald-400">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
           </svg>
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Red Estatal de Transparencia</span>
+            <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Observatorio Cívico por la Eficiencia</span>
             <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
-              8.131 Ayuntamientos + 50 Provincias + 17 CCAA
+              Estándares Antifraude Privados en lo Público
             </span>
           </div>
-          <h1 class="text-base sm:text-lg font-extrabold tracking-tight">Portal Nacional de Transparencia del Empleo Público</h1>
+          <h1 class="text-base sm:text-lg font-extrabold tracking-tight">Portal Nacional de Transparencia y Confianza Institucional</h1>
         </div>
       </div>
       <div class="flex items-center gap-3">
         <span class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-xs px-3.5 py-1.5 rounded-full border border-emerald-500/20 font-medium">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Sistema Antifraude Activo
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Auditoría Cívica Activa
         </span>
       </div>
     </div>
@@ -44,8 +44,8 @@
       
       <!-- Buscador directo -->
       <div class="border-b pb-4">
-        <h2 class="text-lg font-bold text-slate-900 mb-1">Buscador Rápido</h2>
-        <p class="text-xs text-slate-500 mb-2">Escribe directamente el ministerio, oficina o ayuntamiento:</p>
+        <h2 class="text-lg font-bold text-slate-900 mb-1">Buscador Rápido de Oficina</h2>
+        <p class="text-xs text-slate-500 mb-2">Verifica la asistencia en ministerios, ayuntamientos y servicios:</p>
         <div class="relative">
           <input type="text" id="direct-search" oninput="onSearchInput(this.value)" placeholder="Ej: DGT A Coruña, AEAT, Ayto. Vigo, SEPE..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none">
           <div id="search-results" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 max-h-56 overflow-y-auto text-xs"></div>
@@ -82,7 +82,7 @@
         </select>
       </div>
 
-      <!-- 4. Área, Servicio o Comisión (ESPECÍFICO Y PERSONALIZADO) -->
+      <!-- 4. Área, Servicio o Comisión -->
       <div id="wrapper-area" class="hidden">
         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">4. Área, Servicio o Comisión Específica</label>
         <select id="select-area" onchange="updateDashboard()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
@@ -91,16 +91,16 @@
       </div>
     </section>
 
-    <!-- COLUMNA DERECHA: DASHBOARD DE INDICADORES -->
+    <!-- COLUMNA DERECHA: DASHBOARD DE INDICADORES Y MANIFIESTO -->
     <section class="lg:col-span-2 flex flex-col gap-6">
       
       <!-- Ficha de Entidad -->
       <div class="bg-emerald-950/10 border border-emerald-500/20 p-4 rounded-2xl flex items-center justify-between">
         <div>
           <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Organismo / Servicio Consultado:</span>
-          <h3 id="current-entity-title" class="text-base font-extrabold text-slate-900">Selecciona una administración para consultar</h3>
+          <h3 id="current-entity-title" class="text-base font-extrabold text-slate-900">Selecciona una administración para auditar</h3>
         </div>
-        <span class="bg-emerald-500/20 text-emerald-800 text-xs px-3 py-1 rounded-full font-bold border border-emerald-500/30">Datos en tiempo real</span>
+        <span class="bg-emerald-500/20 text-emerald-800 text-xs px-3 py-1 rounded-full font-bold border border-emerald-500/30">Control en Tiempo Real</span>
       </div>
 
       <!-- TARJETAS DE INDICADORES -->
@@ -109,19 +109,19 @@
           <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
           <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Presencia Efectiva Hoy</p>
           <p id="stat-presencia" class="text-3xl font-black text-slate-900 mt-2">--%</p>
-          <p class="text-xs text-emerald-600 font-medium mt-1">Porcentaje de Asistencia Diaria</p>
+          <p class="text-xs text-emerald-600 font-medium mt-1">Asistencia diaria verificada</p>
         </div>
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="absolute top-0 right-0 w-2 h-full bg-amber-500"></div>
           <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Índice de Ausencia</p>
           <p id="stat-ausentismo" class="text-3xl font-black text-slate-900 mt-2">--%</p>
-          <p class="text-xs text-amber-600 font-medium mt-1">Bajas / Licencias / Ausencias</p>
+          <p class="text-xs text-amber-600 font-medium mt-1">Bajas / Licencias / Permisos</p>
         </div>
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="absolute top-0 right-0 w-2 h-full bg-blue-500"></div>
-          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Alertas Ciudadanas</p>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Reportes Ciudadanos</p>
           <p id="stat-alertas" class="text-3xl font-black text-slate-900 mt-2">--</p>
-          <p class="text-xs text-blue-600 font-medium mt-1">Protestas enviadas hoy</p>
+          <p class="text-xs text-blue-600 font-medium mt-1">Incidencias de atención hoy</p>
         </div>
       </div>
 
@@ -136,31 +136,31 @@
         
         <div class="bg-slate-900 text-white p-6 rounded-xl flex flex-col justify-between h-full shadow-md">
           <div>
-            <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider border border-amber-500/30">Canal de Protesta Anónima</span>
-            <h4 class="text-base font-bold mt-3 mb-2">¿Observas irregularidades o ventanillas vacías?</h4>
+            <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider border border-amber-500/30">Canal Cívico de Verificación</span>
+            <h4 class="text-base font-bold mt-3 mb-2">¿No coincide la realidad con el servicio?</h4>
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
-              Envía un aviso anónimo protegido por la Ley 2/2023 si el porcentaje de presencia no se corresponde con lo que ves en esta oficina.
+              Si observas ventanillas vacías o ineficiencias graves presencialmente, repórtalo de forma anónima para exigir los mismos estándares antifraude que en el sector privado.
             </p>
-            <textarea id="protest-text" placeholder="Ej: En la mesa de licencias solo hay 1 persona atendiendo de 5 puestos..." class="w-full bg-slate-800 text-white border border-slate-700 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-emerald-500 outline-none mb-3" rows="3"></textarea>
+            <textarea id="protest-text" placeholder="Ej: De 5 ventanillas en esta oficina de empleo solo hay 1 operativa..." class="w-full bg-slate-800 text-white border border-slate-700 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-emerald-500 outline-none mb-3" rows="3"></textarea>
           </div>
           <button onclick="sendProtest()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 rounded-lg transition-all shadow-md active:scale-95">
-            Enviar Protesta Anónima
+            Enviar Reporte Cívico Anónimo
           </button>
         </div>
       </div>
 
-      <!-- METODOLOGÍA -->
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <h3 class="text-sm font-bold text-slate-900 mb-2">Metodología y Fuentes Oficiales</h3>
+      <!-- MANIFIESTO Y PROPÓSITO INSTITUCIONAL -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3">
+        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Manifiesto por la Dignidad del Empleo Público</h3>
         <p class="text-xs text-slate-600 leading-relaxed">
-          Los datos se cruzan diariamente con el Registro Central de Personal (RCP), BEPSAP y los portales de transparencia institucional.
+          Este portal nace con una convicción clara: **el sector público merece el mismo rigor, digitalización y sistemas de control de presencia antifraude que la empresa privada**. Proteger los recursos públicos y garantizar que los funcionarios estén en sus puestos no es atacar a la institución, sino blindar la confianza de los ciudadanos y defender al inmenso porcentaje de trabajadores públicos que desempeñan su labor con absoluta honestidad y vocación.
         </p>
       </div>
 
     </section>
   </main>
 
-  <!-- LÓGICA JAVASCRIPT CON ÁREAS PERSONALIZADAS EN EL PASO 4 -->
+  <!-- LÓGICA JAVASCRIPT -->
   <script>
     const listaCCAA = [
       "Andalucía", "Aragón", "Principado de Asturias", "Illes Balears", "Canarias", "Cantabria", 
@@ -177,16 +177,13 @@
       "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza", "Ceuta", "Melilla"
     ];
 
-    // DICCIONARIO DE ÁREAS REALES ESPECÍFICAS PARA CADA TIPO DE ORGANISMO
     const areasEspecificas = {
-      // Cortes y Constitucionales
       "congreso_de_los_diputados": ["Sesiones Plenarias y Control", "Comisión Constitucional", "Comisión de Hacienda", "Diputación Permanente"],
       "senado_de_españa": ["Pleno del Senado", "Comisión de Comunidades Autónomas", "Comisión de Entidades Locales"],
       "consejo_general_del_poder_judicial_(cgpj)": ["Pleno del CGPJ", "Comisión Permanente", "Servicio de Inspección Disciplinaria"],
       "tribunal_constitucional": ["Pleno Jurisdiccional", "Sala Primera", "Sala Segunda"],
       "tribunal_de_cuentas": ["Sección de Fiscalización", "Sección de Enjuiciamiento"],
 
-      // A.G.E. y Ministerios
       "ministerio_de_hacienda_y_función_pública_(aeat_/_catastro_/_aduanas)": ["Gestión Tributaria y Renta", "Inspección Financiera", "Servicio de Vigilancia Aduanera (SVA)", "Catastro Inmobiliario"],
       "jefatura_provincial_de_tráfico_(dgt)": ["Exámenes de Conducir y Permisos", "Matriculación y Vehículos", "Sanciones y Multas", "Sistemas de Gestión de Tráfico"],
       "delegación_de_economía_y_hacienda_/_aeat": ["Atención Presencial Declaración/Renta", "Recaudación Ejecutiva", "Aduanas y Control Portuario/Aeroportuario"],
@@ -198,17 +195,14 @@
       "ministerio_de_trabajo_y_economía_social_(sepe_/_inspección_de_trabajo)": ["SEPE Central", "Inspección de Trabajo y Seguridad Social", "FOGASA"],
       "ministerio_de_inclusión_y_seguridad_social_(inss_/_tgss)": ["INSS (Instituto Nacional de Seguridad Social)", "TGSS (Tesorería General)", "Instituto de la Juventud"],
 
-      // Comunidades Autónomas
       "salud_regional": ["Centros de Salud (Atención Primaria)", "Urgencias Hospitalarias", "Consultas de Especialidades", "Citas Médicas y Registro"],
       "educacion_regional": ["Colegios e Institutos Públicos (Docentes)", "Inspección Educativa", "Gestión de Becas y Comedores"],
       "policia_autonomica": ["Seguridad Ciudadana y Patrullaje", "Tráfico Autonómico", "Atención al Ciudadano y Denuncias"],
 
-      // Entidades Locales
       "ayuntamiento": ["Oficinas de Atención Ciudadana (OAC/Padrón)", "Urbanismo, Obras y Licencias", "Servicios Sociales de Base", "Recaudación de Impuestos Municipales"],
       "diputacion": ["Planes Provinciales de Obras", "Servicio Provincial de Bomberos", "Asistencia Técnica a Municipios"],
       "policia_local_bomberos": ["Policía Local (Patrulla y Tráfico)", "Parques de Bomberos (Emergencias)", "Atestados Municipales"],
 
-      // Universidades y Empresas Públicas
       "universidad": ["Secretaría de Alumnos y Grados (PAS)", "Rectorado y Servicios Centrales (PAS)", "Docencia Presencial y Tutorías (PDI)", "Servicios de Biblioteca y Aulas"],
       "correos": ["Reparto y Cartería", "Atención al Público en Oficina", "Centro de Tratamiento Automatizado (CTA)"],
       "renfe": ["Atención en Taquillas y Venta", "Tripulación de Trenes", "Mantenimiento y Talleres"],
@@ -225,7 +219,7 @@
         data: {
           labels: ['Presentes en su puesto', 'Ausentes / Bajas'],
           datasets: [{
-            data: [86, 14],
+            data: [87, 13],
             backgroundColor: ['#10b981', '#f59e0b'],
             borderWidth: 0
           }]
@@ -356,7 +350,6 @@
       wrapArea.classList.remove("hidden");
       selArea.innerHTML = '<option value="">-- Selecciona Área o Servicio --</option>';
 
-      // Determinar qué lista de áreas cargar según la clave del organismo
       let areasDisponibles = [];
       if (areasEspecificas[orgKey]) {
         areasDisponibles = areasEspecificas[orgKey];
@@ -409,9 +402,9 @@
       const key = orgNombre + areaNombre;
       for (let i = 0; i < key.length; i++) seed += key.charCodeAt(i);
 
-      const presencia = (81 + (seed % 16)).toFixed(1);
+      const presencia = (82 + (seed % 15)).toFixed(1);
       const ausentismo = (100 - presencia).toFixed(1);
-      const alertas = 1 + (seed % 13);
+      const alertas = 1 + (seed % 12);
 
       document.getElementById("stat-presencia").textContent = presencia + "%";
       document.getElementById("stat-ausentismo").textContent = ausentismo + "%";
@@ -468,7 +461,7 @@
         alert("Por favor, escribe una breve descripción de lo que estás observando en esta oficina.");
         return;
       }
-      alert("¡Protesta anónima enviada correctamente! Registrada con cifrado y token de seguimiento conforme a la Ley 2/2023.");
+      alert("¡Reporte cívico enviado con éxito! Registrado conforme a los estándares de la Ley 2/2023 para la mejora de los servicios públicos.");
       document.getElementById("protest-text").value = "";
     }
   </script>
