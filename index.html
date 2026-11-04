@@ -9,7 +9,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-  <!-- ENCABEZADO PRINCIPAL CON EL NUEVO PROPÓSITO -->
+  <!-- ENCABEZADO PRINCIPAL -->
   <header class="bg-slate-900 text-white shadow-md border-b border-slate-800">
     <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3.5">
@@ -39,7 +39,7 @@
   <!-- CONTENIDO PRINCIPAL -->
   <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
     
-    <!-- COLUMNA IZQUIERDA: BUSCADOR Y SELECTORES ADAPTATIVOS -->
+    <!-- COLUMNA IZQUIERDA: BUSCADOR Y SELECTORES -->
     <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 lg:col-span-1 flex flex-col gap-5 h-fit">
       
       <!-- Buscador directo -->
@@ -47,7 +47,7 @@
         <h2 class="text-lg font-bold text-slate-900 mb-1">Buscador Rápido de Oficina</h2>
         <p class="text-xs text-slate-500 mb-2">Verifica la asistencia en ministerios, ayuntamientos y servicios:</p>
         <div class="relative">
-          <input type="text" id="direct-search" oninput="onSearchInput(this.value)" placeholder="Ej: DGT A Coruña, AEAT, Ayto. Vigo, SEPE..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none">
+          <input type="text" id="direct-search" oninput="onSearchInput(this.value)" placeholder="Ej: DGT, AEAT, Ayto. Vigo, SEPE..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none">
           <div id="search-results" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 max-h-56 overflow-y-auto text-xs"></div>
         </div>
       </div>
@@ -82,16 +82,23 @@
         </select>
       </div>
 
-      <!-- 4. Área, Servicio o Comisión -->
+      <!-- 4. Área o Servicio Específico -->
       <div id="wrapper-area" class="hidden">
         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">4. Área, Servicio o Comisión Específica</label>
-        <select id="select-area" onchange="updateDashboard()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
+        <select id="select-area" onchange="onAreaChange()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
           <option value="">-- Selecciona Área / Servicio --</option>
         </select>
       </div>
+
+      <!-- 5. Ciudad / Localidad Específica -->
+      <div id="wrapper-localidad" class="hidden">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">5. Ciudad o Localidad Específica</label>
+        <input type="text" id="input-localidad" oninput="updateDashboard()" placeholder="Ej: Santiago, Madrid Centro, Vigo, Alcobendas..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none">
+      </div>
+
     </section>
 
-    <!-- COLUMNA DERECHA: DASHBOARD DE INDICADORES Y MANIFIESTO -->
+    <!-- COLUMNA DERECHA: DASHBOARD DE INDICADORES -->
     <section class="lg:col-span-2 flex flex-col gap-6">
       
       <!-- Ficha de Entidad -->
@@ -125,7 +132,7 @@
         </div>
       </div>
 
-      <!-- GRÁFICO Y BUZÓN DE PROTESTA -->
+      <!-- GRÁFICO Y BUZÓN DE REPORTE -->
       <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         <div>
           <h3 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider">Asistencia vs Ausentismo Hoy</h3>
@@ -139,7 +146,7 @@
             <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider border border-amber-500/30">Canal Cívico de Verificación</span>
             <h4 class="text-base font-bold mt-3 mb-2">¿No coincide la realidad con el servicio?</h4>
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
-              Si observas ventanillas vacías o ineficiencias graves presencialmente, repórtalo de forma anónima para exigir los mismos estándares antifraude que en el sector privado.
+              Si observas ventanillas vacías o ineficiencias presencialmente, repórtalo de forma anónima para exigir los mismos estándares antifraude que en el sector privado.
             </p>
             <textarea id="protest-text" placeholder="Ej: De 5 ventanillas en esta oficina de empleo solo hay 1 operativa..." class="w-full bg-slate-800 text-white border border-slate-700 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-emerald-500 outline-none mb-3" rows="3"></textarea>
           </div>
@@ -153,7 +160,7 @@
       <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3">
         <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Manifiesto por la Dignidad del Empleo Público</h3>
         <p class="text-xs text-slate-600 leading-relaxed">
-          Este portal nace con una convicción clara: **el sector público merece el mismo rigor, digitalización y sistemas de control de presencia antifraude que la empresa privada**. Proteger los recursos públicos y garantizar que los funcionarios estén en sus puestos no es atacar a la institución, sino blindar la confianza de los ciudadanos y defender al inmenso porcentaje de trabajadores públicos que desempeñan su labor con absoluta honestidad y vocación.
+          Este portal nace con una convicción clara: <strong>el sector público merece el mismo rigor, digitalización y sistemas de control de presencia antifraude que la empresa privada</strong>. Proteger los recursos públicos y garantizar que los funcionarios estén en sus puestos no es atacar a la institución, sino blindar la confianza de los ciudadanos y defender al inmenso porcentaje de trabajadores públicos que desempeñan su labor con absoluta honestidad y vocación.
         </p>
       </div>
 
@@ -187,7 +194,6 @@
       "ministerio_de_hacienda_y_función_pública_(aeat_/_catastro_/_aduanas)": ["Gestión Tributaria y Renta", "Inspección Financiera", "Servicio de Vigilancia Aduanera (SVA)", "Catastro Inmobiliario"],
       "jefatura_provincial_de_tráfico_(dgt)": ["Exámenes de Conducir y Permisos", "Matriculación y Vehículos", "Sanciones y Multas", "Sistemas de Gestión de Tráfico"],
       "delegación_de_economía_y_hacienda_/_aeat": ["Atención Presencial Declaración/Renta", "Recaudación Ejecutiva", "Aduanas y Control Portuario/Aeroportuario"],
-      "comisaría_de_policía_nacional_/_comandancia_guardia_civil": ["Expedición DNI y Pasaporte", "Extranjería y Visados", "Seguridad Ciudadana y Atención Denuncias", "Atención al Ciudadano Tráfico"],
       "comisaría_de_policía_nacional_y_guardia_civil": ["DNI / Pasaporte / Extranjería", "Seguridad Ciudadana y Patrulla", "Atestados y Denuncias"],
       "oficinas_del_sepe_y_seguridad_social": ["Prestaciones por Desempleo (SEPE)", "Inscripción y Demandantes", "Atención CAISS Pensiones e IMV", "Tesorería General (TGSS)"],
       "ministerio_del_interior_(policía_nacional_/_guardia_civil_/_dgt_/_prisiones)": ["Policía Nacional (Comisarías/Fronteras)", "Guardia Civil (Comandancias)", "DGT y Exámenes", "Instituciones Penitenciaras"],
@@ -200,8 +206,9 @@
       "policia_autonomica": ["Seguridad Ciudadana y Patrullaje", "Tráfico Autonómico", "Atención al Ciudadano y Denuncias"],
 
       "ayuntamiento": ["Oficinas de Atención Ciudadana (OAC/Padrón)", "Urbanismo, Obras y Licencias", "Servicios Sociales de Base", "Recaudación de Impuestos Municipales"],
-      "diputacion": ["Planes Provinciales de Obras", "Servicio Provincial de Bomberos", "Asistencia Técnica a Municipios"],
-      "policia_local_bomberos": ["Policía Local (Patrulla y Tráfico)", "Parques de Bomberos (Emergencias)", "Atestados Municipales"],
+      "diputacion": ["Planes Provinciales de Obras", "Asistencia Técnica a Municipios", "Gestión Tributaria Local"],
+      "policia_local": ["Patrulla Urbana y Seguridad Ciudadana", "Atestados y Tráfico Local", "Atención al Ciudadano"],
+      "cuerpo_de_bomberos": ["Servicio de Retén y Emergencias", "Inspección de Prevención de Incendios", "Operativos de Rescate"],
 
       "universidad": ["Secretaría de Alumnos y Grados (PAS)", "Rectorado y Servicios Centrales (PAS)", "Docencia Presencial y Tutorías (PDI)", "Servicios de Biblioteca y Aulas"],
       "correos": ["Reparto y Cartería", "Atención al Público en Oficina", "Centro de Tratamiento Automatizado (CTA)"],
@@ -236,10 +243,12 @@
       const selPaso2 = document.getElementById("select-paso2");
       const wrapOrg = document.getElementById("wrapper-organismo");
       const wrapArea = document.getElementById("wrapper-area");
+      const wrapLoc = document.getElementById("wrapper-localidad");
 
       wrapPaso2.classList.add("hidden");
       wrapOrg.classList.add("hidden");
       wrapArea.classList.add("hidden");
+      wrapLoc.classList.add("hidden");
 
       if (!nivel) return;
 
@@ -285,6 +294,11 @@
       const valPaso2 = selPaso2.value;
       const nombrePaso2 = selPaso2.options[selPaso2.selectedIndex].text;
       const wrapOrg = document.getElementById("wrapper-organismo");
+      const wrapArea = document.getElementById("wrapper-area");
+      const wrapLoc = document.getElementById("wrapper-localidad");
+
+      wrapArea.classList.add("hidden");
+      wrapLoc.classList.add("hidden");
 
       if (!valPaso2) return;
       wrapOrg.classList.remove("hidden");
@@ -305,25 +319,25 @@
           ];
         } else {
           orgs = [
-            `Jefatura Provincial de Tráfico (DGT)`,
-            `Delegación de Economía y Hacienda / AEAT`,
-            `Comisaría de Policía Nacional y Guardia Civil`,
-            `Oficinas del SEPE y Seguridad Social`
+            "Jefatura Provincial de Tráfico (DGT)",
+            "Delegación de Economía y Hacienda / AEAT",
+            "Comisaría de Policía Nacional y Guardia Civil",
+            "Oficinas del SEPE y Seguridad Social"
           ];
         }
       } else if (nivel === "ccaa") {
         orgs = [
-          `Servicio de Salud de ${nombrePaso2} (SERGAS/SAS/SERMAS...)`,
+          `Servicio de Salud de ${nombrePaso2}`,
           `Consejería de Educación y Centros Públicos de ${nombrePaso2}`,
           `Servicios Centrales y Consejerías de ${nombrePaso2}`,
           `Cuerpo de Policía Autonómica / Emergencias de ${nombrePaso2}`
         ];
       } else if (nivel === "locales") {
         orgs = [
-          `Ayuntamiento Capital de ${nombrePaso2}`,
+          `Ayuntamiento (Oficina Central / Padrón / Licencias) de ${nombrePaso2}`,
           `Diputación Provincial de ${nombrePaso2}`,
-          `Red de Ayuntamientos de la Provincia de ${nombrePaso2}`,
-          `Policía Local y Bomberos de ${nombrePaso2}`
+          `Policía Local de ${nombrePaso2}`,
+          `Cuerpo de Bomberos de ${nombrePaso2}`
         ];
       }
 
@@ -340,12 +354,15 @@
 
     function onOrganismoChange() {
       const selOrg = document.getElementById("select-organismo");
+      const wrapArea = document.getElementById("wrapper-area");
+      const selArea = document.getElementById("select-area");
+      const wrapLoc = document.getElementById("wrapper-localidad");
+
+      wrapLoc.classList.add("hidden");
       if (!selOrg.value) return;
 
       const orgKey = selOrg.value;
       const orgNombre = selOrg.options[selOrg.selectedIndex].text;
-      const wrapArea = document.getElementById("wrapper-area");
-      const selArea = document.getElementById("select-area");
 
       wrapArea.classList.remove("hidden");
       selArea.innerHTML = '<option value="">-- Selecciona Área o Servicio --</option>';
@@ -357,7 +374,7 @@
         areasDisponibles = areasEspecificas["jefatura_provincial_de_tráfico_(dgt)"];
       } else if (orgKey.includes("hacienda") || orgKey.includes("aeat")) {
         areasDisponibles = areasEspecificas["delegación_de_economía_y_hacienda_/_aeat"];
-      } else if (orgKey.includes("salud") || orgKey.includes("sergas") || orgKey.includes("sas") || orgKey.includes("sermas")) {
+      } else if (orgKey.includes("salud")) {
         areasDisponibles = areasEspecificas["salud_regional"];
       } else if (orgKey.includes("educación") || orgKey.includes("escuela")) {
         areasDisponibles = areasEspecificas["educacion_regional"];
@@ -365,7 +382,11 @@
         areasDisponibles = areasEspecificas["ayuntamiento"];
       } else if (orgKey.includes("diputación")) {
         areasDisponibles = areasEspecificas["diputacion"];
-      } else if (orgKey.includes("policía") || orgKey.includes("guardia") || orgKey.includes("bomberos")) {
+      } else if (orgKey.includes("policía_local")) {
+        areasDisponibles = areasEspecificas["policia_local"];
+      } else if (orgKey.includes("bomberos")) {
+        areasDisponibles = areasEspecificas["cuerpo_de_bomberos"];
+      } else if (orgKey.includes("policía") || orgKey.includes("guardia")) {
         areasDisponibles = areasEspecificas["comisaría_de_policía_nacional_y_guardia_civil"];
       } else if (orgKey.includes("universidad")) {
         areasDisponibles = areasEspecificas["universidad"];
@@ -387,19 +408,33 @@
       updateDashboard();
     }
 
+    function onAreaChange() {
+      const selArea = document.getElementById("select-area");
+      const wrapLoc = document.getElementById("wrapper-localidad");
+      
+      if (selArea.value) {
+        wrapLoc.classList.remove("hidden");
+      } else {
+        wrapLoc.classList.add("hidden");
+      }
+      updateDashboard();
+    }
+
     function updateDashboard() {
       const selOrg = document.getElementById("select-organismo");
       const selArea = document.getElementById("select-area");
+      const inputLoc = document.getElementById("input-localidad");
 
       if (!selOrg.value) return;
 
       const orgNombre = selOrg.options[selOrg.selectedIndex]?.text || "Oficina Seleccionada";
       const areaNombre = selArea.value ? selArea.options[selArea.selectedIndex]?.text : "Todas las áreas";
+      const localidadNombre = inputLoc.value.trim() ? ` — (${inputLoc.value.trim()})` : "";
 
-      document.getElementById("current-entity-title").textContent = `${orgNombre} — ${areaNombre}`;
+      document.getElementById("current-entity-title").textContent = `${orgNombre} — ${areaNombre}${localidadNombre}`;
 
       let seed = 0;
-      const key = orgNombre + areaNombre;
+      const key = orgNombre + areaNombre + localidadNombre;
       for (let i = 0; i < key.length; i++) seed += key.charCodeAt(i);
 
       const presencia = (82 + (seed % 15)).toFixed(1);
@@ -425,13 +460,13 @@
 
       const q = query.toLowerCase();
       const sugerencias = [
-        "Jefatura Provincial de Tráfico (DGT) - A Coruña",
+        "Jefatura Provincial de Tráfico (DGT)",
         "AEAT - Atención Presencial Declaración/Renta",
-        "Comisaría Policía Nacional - Expedición DNI y Pasaporte",
-        "Ayuntamiento de Vigo - Licencias y Padrón",
-        "SERGAS - Urgencias Hospitalarias",
-        "Universidad Complutense de Madrid - Secretaría (PAS)",
-        "Sociedad Estatal Correos y Telégrafos - Reparto y Cartería",
+        "Comisaría Policía Nacional - DNI / Pasaporte",
+        "Ayuntamiento - Licencias y Padrón",
+        "Policía Local - Seguridad y Tráfico",
+        "Cuerpo de Bomberos - Retén y Emergencias",
+        "Servicio de Salud - Urgencias Hospitalarias",
         "Oficina del SEPE - Prestaciones por Desempleo"
       ].filter(item => item.toLowerCase().includes(q));
 
